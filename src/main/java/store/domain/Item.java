@@ -6,14 +6,12 @@ public class Item {
     private final String name;
     private final Integer price;
     private final Promotion promotion;
-    private final Integer promotionOfferCount;
 
     public Item(String name, Integer price, Promotion promotion) {
         validate(price, promotion);
         this.name = name;
         this.price = price;
         this.promotion = promotion;
-        this.promotionOfferCount = promotion.getOfferCount();
     }
 
     public Item(String name, Integer price){
@@ -21,7 +19,6 @@ public class Item {
         this.name = name;
         this.price = price;
         this.promotion = null;
-        this.promotionOfferCount = 0;
     }
 
     private void validate(Integer price, Promotion promotion) {
@@ -46,7 +43,11 @@ public class Item {
     }
 
     public Integer getPromotionOfferCount() {
-        return promotionOfferCount;
+        return promotion.getOfferCount();
+    }
+
+    public Integer getPromotionMinimumBuyCount() {
+        return promotion.getMinimumBuyCount();
     }
 
     public Integer getPrice() {

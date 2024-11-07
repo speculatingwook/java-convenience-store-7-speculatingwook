@@ -31,6 +31,21 @@ public class Inventory {
         executeWhenPromotionSufficient(itemWithPromotion, amount);
     }
 
+    public Integer purchasableItemCountWithPromotion(String itemName) {
+        Item itemWithPromotion = getItemWithPromotion(itemName);
+        int offerCount = itemWithPromotion.getPromotionOfferCount();
+        int buyMinimumCount = itemWithPromotion.getPromotionMinimumBuyCount();
+        int maximumSet = inventory.get(itemWithPromotion) / (offerCount + buyMinimumCount);
+
+        return maximumSet * (offerCount + buyMinimumCount);
+    }
+
+    public Integer getTotalItemAmount(String itemName) {
+        Item itemWithPromotion = getItemWithPromotion(itemName);
+        Item itemWithoutPromotion = getItemWithoutPromotion(itemName);
+        return inventory.get(itemWithPromotion) + inventory.get(itemWithoutPromotion);
+    }
+
 
     private void executeWhenPromotionInSufficient(Item itemWithPromotion, Item itemWithoutPromotion, int amount) {
         if(itemWithPromotion != null && inventory.get(itemWithPromotion) < amount) {
@@ -75,9 +90,5 @@ public class Inventory {
             }
         }
         return null;
-    }
-
-    public Integer getInventoryAmount(Item item) {
-        return inventory.get(item);
     }
 }
