@@ -17,6 +17,17 @@ public class PromotionItem extends Item {
         }
     }
 
+    public boolean isLack(Integer requestQuantity) {
+        return promotionCount < requestQuantity;
+    }
+
+    public Integer getLackQuantity(Integer requestQuantity) {
+        if(!isLack(requestQuantity)) {
+           return requestQuantity - promotionCount;
+        }
+        return 0;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
