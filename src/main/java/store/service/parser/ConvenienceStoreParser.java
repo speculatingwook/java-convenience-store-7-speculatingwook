@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class ConvenienceStoreParser implements ItemParser, PromotionParser {
+public class ConvenienceStoreParser implements Parser {
     private final List<ItemDto> itemDtos;
     private final List<PromotionDto> promotionDtos;
 
