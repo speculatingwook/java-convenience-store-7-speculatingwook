@@ -14,7 +14,7 @@ public class Promotion {
     private final Integer offerCount;
     private final LocalDateTime startDate;
     private final LocalDateTime endDate;
-    private static final Pattern isDateFormat = Pattern.compile("^d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])$");
+    private static final Pattern isDateFormat = Pattern.compile("^\\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])$");
 
     public Promotion(String name, String minimumBuyCount, String offerCount, String startDate, String endDate) {
         validate(minimumBuyCount, offerCount, startDate, endDate);
