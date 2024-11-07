@@ -25,21 +25,39 @@ public class Inventory {
     }
 
     public void reduceAmount(String name, Integer requestAmount, boolean isPromotion) {
+        reduceAmountWhenStockIsSufficient(name, requestAmount, isPromotion);
+        reduceAmountWhenPromotionAndNotSufficient(name, requestAmount, isPromotion);
+        reduceAmountWhenNonPromotionAndNotSufficient(name, requestAmount, isPromotion);
+    }
+
+    private void reduceAmountWhenStockIsSufficient(String name, Integer requestAmount, boolean isPromotion) {
         Item targetItem = getItem(name, isPromotion);
         if(!isLack(name, requestAmount, isPromotion)) {
-            inventory.put(targetItem, inventory.get(targetItem) - requestAmount);
-        }
-        if(isPromotion && isLack(name, requestAmount, isPromotion)) {
-            reduceAmountInNonPromotion(name, requestAmount - inventory.get(targetItem));
+            inventory.put(targetItem, inventory.get(targetItem) + requestAmount);
         }
     }
 
-    public void reduceAmountInNonPromotion(String name, Integer lackAmount) throws ArithmeticException {
+    private void reduceAmountWhenPromotionAndNotSufficient(String name, Integer requestAmount, boolean isPromotion) {
+        Item targetItem = getItem(name, isPromotion);
+        if(isPromotion && isLack(name, requestAmount, isPromotion)) {
+            Integer lackAmount = requestAmount - inventory.get(targetItem);
+            inventory.put(targetItem, 0);
+            reduceAmountInNonPromotion(name, lackAmount);
+        }
+    }
+
+    private void reduceAmountWhenNonPromotionAndNotSufficient(String name, Integer requestAmount, boolean isPromotion) {
+        if(!isPromotion && isLack(name, requestAmount, isPromotion)) {
+            reduceAmountInNonPromotion(name, requestAmount);
+        }
+    }
+
+    private void reduceAmountInNonPromotion(String name, Integer requestAmount) throws ArithmeticException {
         Item nonPromotionItem = getItem(name, false);
-        if(isLack(name, lackAmount, false)) {
+        if(nonPromotionItem == null || isLack(name, requestAmount, false)) {
             throw new ArithmeticException("[ERROR] 재고가 부족합니다.");
         }
-        inventory.put(nonPromotionItem, inventory.get(nonPromotionItem) - lackAmount);
+        inventory.put(nonPromotionItem, inventory.get(nonPromotionItem) - requestAmount);
     }
 
     public Item getItem(String name, boolean isPromotion) {
