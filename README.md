@@ -61,8 +61,8 @@
 - [x] 문자열을 기준으로 items에 맞는 데이터 타입으로 파싱한다.
 
 #### InventoryFactory
-- [ ] FileReader에서 읽어온 값으로 재고를 만들고, Inventory를 생성한다.
-- [ ] FileReader는 주입을 받는다.
+- [x] Reader에서 읽어온 값을 Parser로 파싱 후 재고를 만들고, Inventory를 생성한다.
+- [x] FileReader, ConvenienceStoreParser 주입을 받는다.
 
 #### Discount(interface) extends PromotionDiscount, MembershipDiscount
 - [ ] 각 할인을 총 정리한다.
