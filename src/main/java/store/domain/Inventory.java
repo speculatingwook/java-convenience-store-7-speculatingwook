@@ -23,6 +23,36 @@ public class Inventory {
         return getTotalAmount(item) >= requestAmount;
     }
 
+    public void deductItem(String itemName, int amount) {
+        Item itemWithPromotion = getItemWithPromotion(itemName);
+        Item itemWithoutPromotion = getItemWithoutPromotion(itemName);
+
+        executeWhenPromotionInSufficient(itemWithPromotion,itemWithoutPromotion,amount);
+        executeWhenPromotionSufficient(itemWithPromotion, amount);
+    }
+
+
+    private void executeWhenPromotionInSufficient(Item itemWithPromotion, Item itemWithoutPromotion, int amount) {
+        if(itemWithPromotion != null && inventory.get(itemWithPromotion) < amount) {
+            deductItemWhenAmountsCombined(itemWithPromotion,itemWithoutPromotion,amount);
+        }
+    }
+    private void executeWhenPromotionSufficient(Item itemWithPromotion, int amount) {
+        if (itemWithPromotion != null && inventory.get(itemWithPromotion) > amount) {
+            deductItem(itemWithPromotion, amount);
+        }
+    }
+
+    private void deductItemWhenAmountsCombined(Item itemWithPromotion, Item itemWithoutPromotion, int amount) {
+        int leftAmount = inventory.get(itemWithPromotion) - amount;
+        deductItem(itemWithPromotion, amount);
+        deductItem(itemWithoutPromotion, leftAmount);
+    }
+
+    private void deductItem(Item item, int amount){
+        inventory.put(item, inventory.get(item) - amount);
+    }
+
     public Integer getTotalAmount(String item){
         Item itemWithPromotion = getItemWithPromotion(item);
         Item itemWithoutPromotion = getItemWithoutPromotion(item);
@@ -46,8 +76,6 @@ public class Inventory {
         }
         return null;
     }
-
-
 
     public Integer getInventoryAmount(Item item) {
         return inventory.get(item);
