@@ -57,8 +57,8 @@
 - [x] 파일을 읽어온다.
 
 #### Parser
-- [ ] 문자열을 기준으로 promotions에 맞는 데이터 타입으로 파싱한다.
-- [ ] 문자열을 기준으로 items에 맞는 데이터 타입으로 파싱한다.
+- [x] 문자열을 기준으로 promotions에 맞는 데이터 타입으로 파싱한다.
+- [x] 문자열을 기준으로 items에 맞는 데이터 타입으로 파싱한다.
 
 #### InventoryFactory
 - [ ] FileReader에서 읽어온 값으로 재고를 만들고, Inventory를 생성한다.
