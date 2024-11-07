@@ -43,9 +43,12 @@
 
 
 ### 동작
+### FileReader
+- [ ] 파일을 읽어온다.
+
 #### InventoryFactory
-- [ ] resource의 값을 읽어와서 각 재고를 만들고, Inventory를 생성한다.
-- [ ] resource의 값을 읽어오는 로직은 주입을 받는다.
+- [ ] FileReader에서 읽어온 값으로 재고를 만들고, Inventory를 생성한다.
+- [ ] FileReader는 주입을 받는다.
 
 #### Discount(interface) extends PromotionDiscount, MembershipDiscount
 - [ ] 각 할인을 총 정리한다.
