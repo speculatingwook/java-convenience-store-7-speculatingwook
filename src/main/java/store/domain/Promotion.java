@@ -6,6 +6,7 @@ import camp.nextstep.edu.missionutils.DateTimes;
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 import java.util.regex.Pattern;
 
 public class Promotion {
@@ -65,5 +66,10 @@ public class Promotion {
 
     public Integer getOfferCount() {
         return offerCount;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(name);
     }
 }
