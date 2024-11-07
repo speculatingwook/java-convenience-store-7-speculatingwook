@@ -1,4 +1,4 @@
-package store.service;
+package store.service.reader;
 
 public interface Reader {
     String read(String argument);

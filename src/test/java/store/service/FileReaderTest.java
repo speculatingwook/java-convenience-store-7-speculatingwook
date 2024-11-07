@@ -1,7 +1,7 @@
 package store.service;
 
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+import store.service.reader.FileReader;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
