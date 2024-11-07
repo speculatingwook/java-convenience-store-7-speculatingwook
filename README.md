@@ -65,23 +65,18 @@
 - [x] FileReader, ConvenienceStoreParser 주입을 받는다.
 
 #### Discount(interface) extends PromotionDiscount, MembershipDiscount
-- [ ] 각 할인을 총 정리한다.
+- [x] 각 할인을 상속받는다.
 
 #### PromotionDiscount(interface)
 > 프로모션 할인
-- [ ] 프로모션의 값만큼 할인한다.
+- [x] 프로모션으로 제공되는 물품의 개수를 계산한다.
 
 #### MembershipDiscount(interface)
 > 멤버십 할인
-- [ ] 프로모션된 물품을 제외한 나머지 상품의 재고를 확인하고 할인한다.
-- [ ] 할인 퍼센트는 주입받는다.
+- [x] 상품을 할인 퍼센트만큼 할인한 금액을 계산한다.
+- [x] 할인 퍼센트는 주입받는다.
 
-#### DiscountService implements Discount
-- [ ] 각 할인을 상황에 맞게 할인한다.
-
-#### ReceiptBuilder
-- [ ] 영수증을 업데이트한다.
-
-
+#### ConvenienceStoreDiscount implements Discount
+- [x] 각 할인을 구현한다.
 
 ### 유틸
