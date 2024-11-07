@@ -56,6 +56,10 @@ public class Item {
         return name;
     }
 
+    public boolean getIsPromotion() {
+        return isPromotion;
+    }
+
     @Override
     public int hashCode() {
         return Objects.hash(name + isPromotion);
