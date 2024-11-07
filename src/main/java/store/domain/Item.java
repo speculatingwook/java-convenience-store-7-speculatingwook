@@ -1,5 +1,7 @@
 package store.domain;
 
+import java.util.Objects;
+
 public class Item {
     private final String name;
     private final Integer price;
@@ -32,5 +34,10 @@ public class Item {
     public void reduceQuantity(Integer quantity) {
         validateQuantity(this.quantity - quantity);
         this.quantity = this.quantity - quantity;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(name);
     }
 }
