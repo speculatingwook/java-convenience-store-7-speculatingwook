@@ -42,12 +42,16 @@ public class Inventory {
         inventory.put(nonPromotionItem, inventory.get(nonPromotionItem) - lackAmount);
     }
 
-    private Item getItem(String name, boolean isPromotion) {
+    public Item getItem(String name, boolean isPromotion) {
         for (Item item : inventory.keySet()) {
             if(item.getName().equals(name) && item.getIsPromotion() == isPromotion) {
                 return item;
             }
         }
         return null;
+    }
+
+    public Integer getInventoryAmount(Item item) {
+        return inventory.get(item);
     }
 }

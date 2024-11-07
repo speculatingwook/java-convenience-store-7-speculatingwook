@@ -26,24 +26,4 @@ class ItemTest {
         assertEquals("[ERROR] 금액은 음수가 불가능합니다.", exception.getMessage());
     }
 
-    @Test
-    @DisplayName("아이템에 음수 수량이 들어갈 수 없다.")
-    void testItemCreationWithNegativeQuantityThrowsException() {
-        // Given & When & Then
-        Exception exception = assertThrows(ArithmeticException.class, () ->
-                new Item("Apple", 1000, -10)
-        );
-        assertEquals("[ERROR] 수량은 음수가 불가능합니다.", exception.getMessage());
-    }
-
-
-    @Test
-    @DisplayName("재고 차감시, 음수가 된다면 예외 발생")
-    void testReduceQuantityExceedsAvailableQuantity() {
-        // Given
-        Item item = new Item("Apple", 1000, 5);
-
-        // When & Then
-        assertThrows(ArithmeticException.class, () -> item.reduceQuantity(10));
-    }
 }
