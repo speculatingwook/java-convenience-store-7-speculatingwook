@@ -7,36 +7,26 @@ public class Item {
     private final Integer price;
     private final boolean isPromotion;
     private final Integer promotionAmount;
-    private Integer quantity;
 
-    public Item(String name, Integer price, Integer quantity) {
-        validate(price, quantity);
+    public Item(String name, Integer price) {
+        validate(price);
         this.name = name;
         this.price = price;
-        this.quantity = quantity;
         this.isPromotion = false;
         this.promotionAmount = 0;
     }
 
-    public Item(String name, Integer price, Integer quantity, Integer promotionAmount) {
-        validate(price, quantity);
+    public Item(String name, Integer price, Integer promotionAmount) {
+        validate(price);
         this.name = name;
         this.price = price;
-        this.quantity = quantity;
         this.isPromotion = true;
         validatePromotionAmount(promotionAmount);
         this.promotionAmount = promotionAmount;
     }
 
-    private void validate(Integer price, Integer quantity) {
+    private void validate(Integer price) {
         validatePrice(price);
-        validateQuantity(quantity);
-    }
-
-    private void validateQuantity(Integer quantity) {
-        if (quantity < 0) {
-            throw new ArithmeticException("[ERROR] 수량은 음수가 불가능합니다.");
-        }
     }
 
     private void validatePrice(Integer price) {
@@ -64,15 +54,6 @@ public class Item {
 
     public String getName() {
         return name;
-    }
-
-    public Integer getQuantity() {
-        return Integer.valueOf(quantity);
-    }
-
-    public void reduceQuantity(Integer quantity) {
-        validateQuantity(this.quantity - quantity);
-        this.quantity = this.quantity - quantity;
     }
 
     @Override
