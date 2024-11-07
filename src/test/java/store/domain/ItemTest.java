@@ -37,13 +37,13 @@ class ItemTest {
     }
 
 
-//    @Test
-//    @DisplayName("재고 차감시, 음수가 된다면 예외 발생")
-//    void testReduceQuantityExceedsAvailableQuantity() {
-//        // Given
-//        Item item = new Item("Apple", 1000, 5);
-//
-//        // When & Then
-//        assertThrows(ArithmeticException.class, () -> item.reduceQuantity(10));
-//    }
+    @Test
+    @DisplayName("재고 차감시, 음수가 된다면 예외 발생")
+    void testReduceQuantityExceedsAvailableQuantity() {
+        // Given
+        Item item = new Item("Apple", 1000, 5);
+
+        // When & Then
+        assertThrows(ArithmeticException.class, () -> item.reduceQuantity(10));
+    }
 }

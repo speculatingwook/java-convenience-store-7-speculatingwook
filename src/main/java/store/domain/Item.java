@@ -30,6 +30,7 @@ public class Item {
     }
 
     public void reduceQuantity(Integer quantity) {
+        validateQuantity(this.quantity - quantity);
         this.quantity = this.quantity - quantity;
     }
 }
