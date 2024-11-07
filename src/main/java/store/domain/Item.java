@@ -7,27 +7,36 @@ public class Item {
     private final Integer price;
     private final Promotion promotion;
 
-    public Item(String name, Integer price, Promotion promotion) {
+    public Item(String name, String price, Promotion promotion) {
         validate(price, promotion);
         this.name = name;
-        this.price = price;
+        this.price = Integer.parseInt(price);
         this.promotion = promotion;
     }
 
-    public Item(String name, Integer price){
+    public Item(String name, String price){
         validatePrice(price);
         this.name = name;
-        this.price = price;
+        this.price = Integer.parseInt(price);
         this.promotion = null;
     }
 
-    private void validate(Integer price, Promotion promotion) {
+    private void validate(String price, Promotion promotion) {
+        validateNumeric(price);
         validatePrice(price);
         validatePromotionOffer(promotion.getOfferCount());
     }
 
-    private void validatePrice(Integer price) {
-        if (price < 0) {
+    private void validateNumeric(String input) {
+        try{
+            Integer.parseInt(input);
+        }catch (NumberFormatException e){
+            throw new NumberFormatException(input);
+        }
+    }
+
+    private void validatePrice(String price) {
+        if (Integer.parseInt(price) < 0) {
             throw new ArithmeticException("[ERROR] 금액은 음수가 불가능합니다.");
         }
     }
