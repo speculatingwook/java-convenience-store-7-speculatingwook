@@ -31,13 +31,8 @@ public class Inventory {
         executeWhenPromotionSufficient(itemWithPromotion, amount);
     }
 
-    public Integer purchasableItemCountWithPromotion(String itemName) {
-        Item itemWithPromotion = getItemWithPromotion(itemName);
-        int offerCount = itemWithPromotion.getPromotionOfferCount();
-        int buyMinimumCount = itemWithPromotion.getPromotionMinimumBuyCount();
-        int maximumSet = inventory.get(itemWithPromotion) / (offerCount + buyMinimumCount);
-
-        return maximumSet * (offerCount + buyMinimumCount);
+    public Integer getItemCount(Item item) {
+        return inventory.get(item);
     }
 
     public Integer getTotalItemAmount(String itemName) {
