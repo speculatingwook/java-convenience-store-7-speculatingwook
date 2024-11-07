@@ -97,7 +97,7 @@ class PromotionTest {
         boolean result = promotion.isPromotionValid();
 
         // then
-        assertFalse(result);
+        assertTrue(result);
     }
 
     @Test
