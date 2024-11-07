@@ -53,6 +53,10 @@ public class Item {
         return price;
     }
 
+    public boolean isPromotionPresent() {
+        return promotion != null;
+    }
+
 
     @Override
     public int hashCode() {
