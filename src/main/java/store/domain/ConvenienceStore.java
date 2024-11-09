@@ -5,7 +5,6 @@ import store.service.discount.Discount;
 import java.util.HashMap;
 import java.util.Map;
 
-//- [ ] 멤버쉽할인 여부에 따라 멤버쉽 할인을 한다.
 //- [ ] 구매 상품 내역, 증정 상품 내역, 금액 정보가 담긴 영수증을 발행한다.
 //- [ ] 추가 구매 여부를 확인한다.
 //- [ ] 인벤토리의 변경 내역을 반영한다.
@@ -14,6 +13,7 @@ public class ConvenienceStore {
     private final Receipt receipt;
     private final Discount discount;
     private final Map<String, Integer> requestItems;
+    private final Map<String, Integer> promotionItems;
     private final Map<String, Integer> nonPromotionItems;
 
     public ConvenienceStore(Inventory inventory, Receipt receipt, Discount discount) {
@@ -21,7 +21,8 @@ public class ConvenienceStore {
         this.receipt = receipt;
         this.discount = discount;
         this.requestItems = new HashMap<>();
-        nonPromotionItems = new HashMap<>();
+        this.promotionItems = new HashMap<>();
+        this.nonPromotionItems = new HashMap<>();
     }
 
     public void sell() {
@@ -104,9 +105,12 @@ public class ConvenienceStore {
     private void addPromotionItemToCart(String itemName, int count) {
         Item item = inventory.getItemWithPromotion(itemName);
         Integer itemPrice = item.getPrice();
+        int promotionCount = count / item.getPromotionMinimumBuyCount();
+        int promotionTotalCount = promotionCount * item.getPromotionMinimumBuyCount();
         inventory.deductItem(itemName, count);
+        putPromotionItem(itemName, promotionCount);
         receipt.addItemContent(itemName, count, count * itemPrice);
-        receipt.addPromotionContent(itemName, count /item.getPromotionMinimumBuyCount());
+        receipt.addPromotionContent(itemName, promotionTotalCount);
     }
 
     private void putNonPromotionItem(String itemName, int count) {
@@ -117,6 +121,58 @@ public class ConvenienceStore {
             nonPromotionItems.put(itemName, count);
         }
     }
+
+    private void putPromotionItem(String itemName, int count) {
+        if(promotionItems.containsKey(itemName)) {
+            promotionItems.put(itemName, promotionItems.get(itemName) + count);
+        }
+        if(!promotionItems.containsKey(itemName)) {
+            promotionItems.put(itemName, count);
+        }
+    }
+
+    private Integer getTotalAmount() {
+        int totalAmount = 0;
+        for (Map.Entry<String, Integer> entry : requestItems.entrySet()) {
+            String itemName = entry.getKey();
+            Integer quantity = entry.getValue();
+            totalAmount += inventory.getItem(itemName).getPrice() * quantity;
+        }
+        return totalAmount;
+    }
+
+    private Integer getTotalCount() {
+        int totalCount = 0;
+        for (Map.Entry<String, Integer> entry : requestItems.entrySet()) {
+            Integer quantity = entry.getValue();
+            totalCount += quantity;
+        }
+        return totalCount;
+    }
+
+    public Receipt getReceipt() {
+        int totalAmount = getTotalAmount();
+        int totalCount = getTotalCount();
+        int promotionDiscountAmount = receivePromotionDiscount();
+        double membershipDiscountAmount = receiveMembershipDiscount();
+        double totalPay = totalAmount - promotionDiscountAmount - membershipDiscountAmount;
+        receipt.addTotalPrice(getTotalCount(), getTotalAmount());
+        receipt.addTotalDiscount(receivePromotionDiscount(), receiveMembershipDiscount());
+        receipt.addResult(totalPay);
+        return receipt;
+    }
+
+
+    public Integer receivePromotionDiscount() {
+        int totalDiscount = 0;
+        for (Map.Entry<String, Integer> entry : promotionItems.entrySet()) {
+            String itemName = entry.getKey();
+            Integer quantity = entry.getValue();
+            totalDiscount += inventory.getItem(itemName).getPrice() * quantity;
+        }
+        return totalDiscount;
+    }
+
 
     public Double receiveMembershipDiscount() {
         int totalPrice = 0;

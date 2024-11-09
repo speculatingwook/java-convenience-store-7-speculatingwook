@@ -28,7 +28,7 @@ public class Receipt {
         promotionContent.append(itemName).append("\t\t").append(count).append("\n");
     }
 
-    public void addTotalPrice(String totalCount, int totalPrice) {
+    public void addTotalPrice(int totalCount, int totalPrice) {
         totalContent.append("총구매액").append("\t\t").append(totalCount).append("\t").append(totalPrice).append("\n");
     }
 
@@ -37,7 +37,7 @@ public class Receipt {
         totalContent.append("멤버십할인").append("\t\t").append("-").append(totalMembershipDiscount).append("\n");
     }
 
-    public void addResult(int totalPrice) {
+    public void addResult(double totalPrice) {
         totalContent.append("내실돈").append("\t\t").append(totalPrice).append("\n");
     }
 
