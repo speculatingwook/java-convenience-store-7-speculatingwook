@@ -1,6 +1,8 @@
 package store.domain;
 
 
+import store.service.parser.ConvenienceStoreParser;
+
 import java.util.HashMap;
 
 public class Inventory {
@@ -94,5 +96,19 @@ public class Inventory {
             }
         }
         return null;
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder currentStock = new StringBuilder();
+        for(Item item : inventory.keySet()) {
+            currentStock.append("- ")
+                    .append(item.getName())
+                    .append(" ")
+                    .append(ConvenienceStoreParser.formatNumberWithComma(item.getPrice())).append("원 ")
+                    .append(inventory.get(item)).append("개").append(" ")
+                    .append(item.getPromotionName()).append("\n");
+        }
+        return currentStock.toString();
     }
 }

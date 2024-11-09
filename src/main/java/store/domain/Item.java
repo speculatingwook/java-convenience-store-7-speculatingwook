@@ -24,7 +24,7 @@ public class Item {
     private void validate(String price, Promotion promotion) {
         validateNumeric(price);
         validatePrice(price);
-        validatePromotionOffer(promotion.getOfferCount());
+//        validatePromotionOffer(promotion.getOfferCount());
     }
 
     private void validateNumeric(String input) {
@@ -68,6 +68,9 @@ public class Item {
     }
 
     public String getPromotionName() {
+        if(promotion == null) {
+            return "";
+        }
         return promotion.getPromotionName();
     }
 

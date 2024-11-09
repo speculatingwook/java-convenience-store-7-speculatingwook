@@ -5,14 +5,16 @@ import store.domain.Item;
 import store.dto.ItemDto;
 import store.dto.PromotionDto;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.text.DecimalFormat;
+import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 public class ConvenienceStoreParser implements Parser {
     private final List<ItemDto> itemDtos;
     private final List<PromotionDto> promotionDtos;
+    private static final Pattern REQUEST_INPUT_REGEX = Pattern.compile("(\\w+)-(\\d+)");
 
     public ConvenienceStoreParser(String itemData, String promotionData) {
         this.itemDtos = parseToItemDtos(itemData);
@@ -30,7 +32,7 @@ public class ConvenienceStoreParser implements Parser {
     @Override
     public List<ItemDto> parseToItemDtos(String data) {
         List<ItemDto> items = new ArrayList<>();
-        List<String> lines = Arrays.asList(data.split("\n"));
+        List<String> lines = Arrays.stream(data.split("\n")).collect(Collectors.toList());
         lines.removeFirst();
         for (String line : lines) {
             items.add(parseToItemDto(line));
@@ -41,7 +43,7 @@ public class ConvenienceStoreParser implements Parser {
     @Override
     public List<PromotionDto> parseToPromotionDtos(String data) {
         List<PromotionDto> promotions = new ArrayList<>();
-        List<String> lines = Arrays.asList(data.split("\n"));
+        List<String> lines = Arrays.stream(data.split("\n")).collect(Collectors.toList());
         lines.removeFirst();
         for (String line : lines) {
             promotions.add(parseToPromotionDto(line));
@@ -72,4 +74,20 @@ public class ConvenienceStoreParser implements Parser {
 
         return header + "\n" + itemsText;
     }
+
+    public static String formatNumberWithComma(int number) {
+        DecimalFormat decimalFormat = new DecimalFormat("#,###");
+        return decimalFormat.format(number);
+    }
+
+    public static Map<String, Integer> parseRequestToMap(String data) {
+        return Arrays.stream(data.split(","))
+                .map(REQUEST_INPUT_REGEX::matcher)
+                .filter(Matcher::find)
+                .collect(Collectors.toMap(
+                        m -> m.group(1),
+                        m -> Integer.parseInt(m.group(2))
+                ));
+    }
+
 }

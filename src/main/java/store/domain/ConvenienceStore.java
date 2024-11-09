@@ -1,6 +1,7 @@
 package store.domain;
 
 import store.dto.ItemDto;
+import store.io.StoreInput;
 import store.io.writer.Writer;
 import store.service.discount.Discount;
 import store.service.parser.Parser;
@@ -16,33 +17,34 @@ public class ConvenienceStore {
     private final Discount discount;
     private final Writer writer;
     private final Parser parser;
+    private final StoreInput input;
     private final Map<String, Integer> requestItems;
     private final Map<String, Integer> promotionItems;
     private final Map<String, Integer> nonPromotionItems;
 
-    public ConvenienceStore(Inventory inventory, Receipt receipt, Discount discount, Writer writer, Parser parser) {
+    public ConvenienceStore(Inventory inventory, Receipt receipt, Discount discount, Writer writer, Parser parser, StoreInput input) {
         this.inventory = inventory;
         this.receipt = receipt;
         this.discount = discount;
         this.writer = writer;
         this.parser = parser;
+        this.input = input;
         this.requestItems = new HashMap<>();
         this.promotionItems = new HashMap<>();
         this.nonPromotionItems = new HashMap<>();
     }
 
-    public void sell() {
+    public void scan(Map<String, Integer> requestItems) {
+        this.requestItems.putAll(requestItems);
         for (Map.Entry<String, Integer> entry : requestItems.entrySet()) {
             String itemName = entry.getKey();
             Integer quantity = entry.getValue();
             if (isRequestAmountCanOfferPromotion(itemName, quantity)) {
-                // 유저에게 제안 필요
-                String anotherInputThatReceiveYorN = "Y";
-                offerMoreItemWhenPromotionCanbeOffered(anotherInputThatReceiveYorN, itemName);
+                String isAdditionalRequest = input.readMoreStockForDiscountRequest(itemName);
+                offerMoreItemWhenPromotionCanbeOffered(isAdditionalRequest, itemName);
             }
             if(isPromotionAmountLack(itemName, quantity)) {
-                // 유저에게 제안 필요
-                String anotherInputThatReceiveYorN = "N";
+                String anotherInputThatReceiveYorN = input.readFullPricePaymentRequest(itemName, quantity - discount.calculatePromotionItemCount(itemName, quantity));
                 executeWhenPromotionLack(anotherInputThatReceiveYorN, itemName, quantity);
             }
         }
@@ -156,7 +158,7 @@ public class ConvenienceStore {
         return totalCount;
     }
 
-    public Receipt getReceipt() {
+    public void issueReceipt() {
         int totalAmount = getTotalAmount();
         int totalCount = getTotalCount();
         int promotionDiscountAmount = receivePromotionDiscount();
@@ -165,7 +167,7 @@ public class ConvenienceStore {
         receipt.addTotalPrice(getTotalCount(), getTotalAmount());
         receipt.addTotalDiscount(receivePromotionDiscount(), receiveMembershipDiscount());
         receipt.addResult(totalPay);
-        return receipt;
+        writeChangedContent();
     }
 
     private void writeChangedContent() {
