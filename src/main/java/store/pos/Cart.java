@@ -33,13 +33,4 @@ public class Cart {
         return requestItems;
     }
 
-    public void addItemToCart(String itemName, Integer count) {
-        if(requestItems.containsKey(itemName)) {
-            requestItems.put(itemName, requestItems.get(itemName) + count);
-        }
-        if(!requestItems.containsKey(itemName)) {
-            requestItems.put(itemName, count);
-        }
-    }
-
 }

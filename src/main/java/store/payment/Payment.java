@@ -1,6 +1,6 @@
 package store.payment;
 
-import store.pos.PromotionCatalog;
+import store.pos.ScanItemInfo;
 import store.stock.Item;
 import store.dto.ItemDto;
 
@@ -10,13 +10,13 @@ import java.util.Map;
 
 public class Payment {
     private final Receipt receipt;
-    private PromotionCatalog catalog;
+    private ScanItemInfo catalog;
 
     public Payment(Receipt receipt) {
         this.receipt = receipt;
     }
 
-    public void receiveData(PromotionCatalog catalog) {
+    public void receiveData(ScanItemInfo catalog) {
         this.catalog = catalog;
     }
 

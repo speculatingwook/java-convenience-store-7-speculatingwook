@@ -10,11 +10,11 @@ import java.util.Map;
  */
 public class PosScanner {
     private final Inventory inventory;
-    private final PromotionCatalog catalog;
+    private final ScanItemInfo scanItemInfo;
 
-    public PosScanner(Inventory inventory, PromotionCatalog catalog) {
+    public PosScanner(Inventory inventory, ScanItemInfo scanItemInfo) {
         this.inventory = inventory;
-        this.catalog = catalog;
+        this.scanItemInfo = scanItemInfo;
     }
 
     public void scanItems(Map<String, Integer> items) {
@@ -29,14 +29,14 @@ public class PosScanner {
     private void classifyUnpromotedItems(String itemName, Integer itemCount) {
         if(inventory.isItemInPromotion(itemName)) {
             Item unpromotedItem = inventory.getItemWithPromotion(itemName);
-            catalog.putUnPromotedItem(unpromotedItem, itemCount);
+            scanItemInfo.updateUnPromotedItem(unpromotedItem, itemCount);
         }
     }
 
     private void classifyPromotedItems(String itemName, Integer itemCount) {
         if(!inventory.isItemInPromotion(itemName)) {
             Item promotedItem = inventory.getItemWithPromotion(itemName);
-            catalog.putPromotedItem(promotedItem, itemCount);
+            scanItemInfo.updatePromotedItem(promotedItem, itemCount);
         }
     }
 }

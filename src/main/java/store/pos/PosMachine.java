@@ -10,13 +10,13 @@ public class PosMachine {
     private final PosScanner scanner;
     private final Cart cart;
     private final Inventory inventory;
-    private final PromotionCatalog catalog;
+    private final ScanItemInfo scanItemInfo;
 
-    public PosMachine(PosScanner scanner, Cart cart, Inventory inventory, PromotionCatalog catalog) {
+    public PosMachine(PosScanner scanner, Cart cart, Inventory inventory, ScanItemInfo scanItemInfo) {
         this.scanner = scanner;
         this.cart = cart;
         this.inventory = inventory;
-        this.catalog = catalog;
+        this.scanItemInfo = scanItemInfo;
     }
 
     public void scanCartItems() {
@@ -24,7 +24,7 @@ public class PosMachine {
     }
 
     public void updateCatalog(StoreInput input) {
-        Map<Item, Integer> promotedItems =  catalog.getPromotedItems();
+        Map<Item, Integer> promotedItems =  scanItemInfo.getPromotedItems();
         for (Map.Entry<Item, Integer> entry : promotedItems.entrySet()) {
             Item item = entry.getKey();
             Integer quantity = entry.getValue();
@@ -34,10 +34,12 @@ public class PosMachine {
     }
 
     private void offerMorePromotedItem(Item item, Integer quantity, StoreInput input) {
-        String yesOrNo = input.readMoreStockForDiscountRequest(item.getName());
+        if(canOfferMorePromotions(item, quantity)) {
+            String yesOrNo = input.readMoreStockForDiscountRequest(item.getName());
 
-        if(canOfferMorePromotions(item, quantity) && yesOrNo.equals("Y")) {
-            cart.addItemToCart(item.getName(), item.getPromotionOfferCount());
+            if(yesOrNo.equals("Y")) {
+                scanItemInfo.updatePromotedItem(item, quantity);
+            }
         }
     }
 
@@ -48,7 +50,7 @@ public class PosMachine {
         if(isPromotedAmountLack(item.getName(), quantity) && yesOrNo.equals("Y")) {
             Integer totalStock = inventory.getTotalAmount(item.getName());
             Integer nonPromotionAmount = totalStock - getPromotedItemMaxSellCount(item.getName());
-            catalog.putUnPromotedItem(item, nonPromotionAmount);
+            scanItemInfo.updateUnPromotedItem(item, nonPromotionAmount);
         }
     }
 
