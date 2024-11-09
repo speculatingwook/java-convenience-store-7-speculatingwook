@@ -32,7 +32,7 @@ public class Receipt {
         totalContent.append("총구매액").append("\t\t").append(totalCount).append("\t").append(totalPrice).append("\n");
     }
 
-    public void addTotalDiscount(int totalPromotionDiscount, int totalMembershipDiscount) {
+    public void addTotalDiscount(int totalPromotionDiscount, double totalMembershipDiscount) {
         totalContent.append("행사할인").append("\t\t").append("-").append(totalPromotionDiscount).append("\n");
         totalContent.append("멤버십할인").append("\t\t").append("-").append(totalMembershipDiscount).append("\n");
     }

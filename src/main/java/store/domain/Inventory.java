@@ -74,6 +74,10 @@ public class Inventory {
         return inventory.get(itemWithPromotion) + inventory.get(itemWithoutPromotion);
     }
 
+    public Item getItem(String itemName) {
+        return inventory.keySet().stream().filter(item -> item.getName().equals(itemName)).findFirst().orElse(null);
+    }
+
     public Item getItemWithPromotion(String itemName){
         for (Item item : inventory.keySet()) {
             if(item.getName().equals(itemName) && item.isPromotionPresent()){

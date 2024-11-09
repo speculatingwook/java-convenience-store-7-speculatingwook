@@ -2,9 +2,9 @@ package store.domain;
 
 import store.service.discount.Discount;
 
+import java.util.HashMap;
 import java.util.Map;
 
-//- [ ] 프로모션 할인을 진행하고, 영수증에 내용을 추가한다.
 //- [ ] 멤버쉽할인 여부에 따라 멤버쉽 할인을 한다.
 //- [ ] 구매 상품 내역, 증정 상품 내역, 금액 정보가 담긴 영수증을 발행한다.
 //- [ ] 추가 구매 여부를 확인한다.
@@ -13,11 +13,47 @@ public class ConvenienceStore {
     private final Inventory inventory;
     private final Receipt receipt;
     private final Discount discount;
+    private final Map<String, Integer> requestItems;
+    private final Map<String, Integer> nonPromotionItems;
 
     public ConvenienceStore(Inventory inventory, Receipt receipt, Discount discount) {
         this.inventory = inventory;
         this.receipt = receipt;
         this.discount = discount;
+        this.requestItems = new HashMap<>();
+        nonPromotionItems = new HashMap<>();
+    }
+
+    public void sell() {
+        for (Map.Entry<String, Integer> entry : requestItems.entrySet()) {
+            String itemName = entry.getKey();
+            Integer quantity = entry.getValue();
+            if (isRequestAmountCanOfferPromotion(itemName, quantity)) {
+                // 유저에게 제안 필요
+                String anotherInputThatReceiveYorN = "Y";
+                offerMoreItemWhenPromotionCanbeOffered(anotherInputThatReceiveYorN, itemName);
+            }
+            if(isPromotionAmountLack(itemName, quantity)) {
+                // 유저에게 제안 필요
+                String anotherInputThatReceiveYorN = "N";
+                executeWhenPromotionLack(anotherInputThatReceiveYorN, itemName, quantity);
+            }
+        }
+    }
+
+    private void offerMoreItemWhenPromotionCanbeOffered(String yesOrNo, String itemName) {
+        Item promotionItem = inventory.getItemWithPromotion(itemName);
+        if(yesOrNo.equals("Y") && promotionItem != null) {
+            requestItems.put(itemName, requestItems.get(itemName) + promotionItem.getPromotionOfferCount());
+        }
+    }
+
+    private void executeWhenPromotionLack(String yesOrNo, String itemName, Integer quantity) {
+        if(yesOrNo.equals("Y")) {
+            Integer totalStock = inventory.getTotalAmount(itemName);
+            Integer nonPromotionAmount = totalStock - discount.calculatePromotionItemCount(itemName, quantity);
+            putNonPromotionItem(itemName, nonPromotionAmount);
+        }
     }
 
     public boolean isRequestAmountCanOfferPromotion(String itemName, int count) {
@@ -40,7 +76,7 @@ public class ConvenienceStore {
         return discount.calculatePromotionItemCount(itemName, 0) >= count;
     }
 
-    public void addItemsToCart(Map<String, Integer> requestItems) {
+    public void addItemsToCart() {
         for (Map.Entry<String, Integer> entry : requestItems.entrySet()) {
             String itemName = entry.getKey();
             Integer count = entry.getValue();
@@ -61,6 +97,7 @@ public class ConvenienceStore {
         Item item = inventory.getItemWithoutPromotion(itemName);
         Integer itemPrice = item.getPrice();
         inventory.deductItem(itemName, count);
+        putNonPromotionItem(itemName, count);
         receipt.addItemContent(itemName, count, count * itemPrice);
     }
 
@@ -70,6 +107,25 @@ public class ConvenienceStore {
         inventory.deductItem(itemName, count);
         receipt.addItemContent(itemName, count, count * itemPrice);
         receipt.addPromotionContent(itemName, count /item.getPromotionMinimumBuyCount());
+    }
+
+    private void putNonPromotionItem(String itemName, int count) {
+        if(nonPromotionItems.containsKey(itemName)) {
+            nonPromotionItems.put(itemName, nonPromotionItems.get(itemName) + count);
+        }
+        if(!nonPromotionItems.containsKey(itemName)) {
+            nonPromotionItems.put(itemName, count);
+        }
+    }
+
+    public Double receiveMembershipDiscount() {
+        int totalPrice = 0;
+        for (Map.Entry<String, Integer> entry : nonPromotionItems.entrySet()) {
+            String itemName = entry.getKey();
+            Integer quantity = entry.getValue();
+            totalPrice += inventory.getItem(itemName).getPrice() * quantity;
+        }
+        return discount.calculateMembershipDiscount(totalPrice);
     }
 
 }
