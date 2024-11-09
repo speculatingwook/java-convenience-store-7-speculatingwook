@@ -23,14 +23,18 @@ public class PosMachine {
         scanner.scanItems(cart.getCartItems());
     }
 
-    public void updateCatalog(StoreInput input) {
+    public void updateScanItemInfo(StoreInput input) {
         Map<Item, Integer> promotedItems =  scanItemInfo.getPromotedItems();
         for (Map.Entry<Item, Integer> entry : promotedItems.entrySet()) {
             Item item = entry.getKey();
             Integer quantity = entry.getValue();
             offerMorePromotedItem(item, quantity, input);
-            updatePromotedCatalog(item, quantity, input);
+            checkPromotedItemLack(item, quantity, input);
         }
+    }
+
+    public ScanItemInfo getScanItemInfo() {
+        return scanItemInfo;
     }
 
     private void offerMorePromotedItem(Item item, Integer quantity, StoreInput input) {
@@ -43,11 +47,16 @@ public class PosMachine {
         }
     }
 
-    private void updatePromotedCatalog(Item item, Integer quantity, StoreInput input) {
-        int unpromotedQuantity = quantity - getPromotedItemMaxSellCount(item.getName());
-        String yesOrNo = input.readFullPricePaymentRequest(item.getName(), unpromotedQuantity);
+    private void checkPromotedItemLack(Item item, Integer quantity, StoreInput input) {
+        if(isPromotedAmountLack(item.getName(), quantity)){
+            int unpromotedQuantity = quantity - getPromotedItemMaxSellCount(item.getName());
+            String yesOrNo = input.readFullPricePaymentRequest(item.getName(), unpromotedQuantity);
+            updatePromotedItemToUnpromotedItem(yesOrNo, item);
+        }
+    }
 
-        if(isPromotedAmountLack(item.getName(), quantity) && yesOrNo.equals("Y")) {
+    private void updatePromotedItemToUnpromotedItem(String yesOrNo, Item item) {
+        if(yesOrNo.equals("Y")) {
             Integer totalStock = inventory.getTotalAmount(item.getName());
             Integer nonPromotionAmount = totalStock - getPromotedItemMaxSellCount(item.getName());
             scanItemInfo.updateUnPromotedItem(item, nonPromotionAmount);
