@@ -1,104 +1,112 @@
 package store.payment;
 
+import store.io.StoreInput;
+import store.payment.discount.Discount;
 import store.pos.ScanItemInfo;
 import store.stock.Item;
-import store.dto.ItemDto;
-
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 
 public class Payment {
     private final Receipt receipt;
-    private ScanItemInfo catalog;
+    private final Discount discount
+    private ScanItemInfo scanItemInfo;
 
-    public Payment(Receipt receipt) {
+    public Payment(Receipt receipt, Discount discount) {
         this.receipt = receipt;
+        this.discount = discount;
     }
 
-    public void receiveData(ScanItemInfo catalog) {
-        this.catalog = catalog;
+    public void receiveData(ScanItemInfo scanItemInfo) {
+        this.scanItemInfo = scanItemInfo;
+    }
+
+    public Integer receivePromotionDiscount() {
+        int totalDiscount = 0;
+        Map<Item, Integer> promotedItems = scanItemInfo.getPromotedItems();
+        for (Map.Entry<Item, Integer> entry : promotedItems.entrySet()) {
+            Item item = entry.getKey();
+            Integer quantity = entry.getValue();
+            totalDiscount += item.getPrice() * quantity;
+        }
+        return totalDiscount;
+    }
+
+    public Double receiveMembershipDiscount() {
+        int totalPrice = 0;
+        Map<Item, Integer> unpromotedItems = scanItemInfo.getUnpromotedItems();
+        for (Map.Entry<Item, Integer> entry : unpromotedItems.entrySet()) {
+            Item item = entry.getKey();
+            Integer quantity = entry.getValue();
+            totalPrice += item.getPrice() * quantity;
+        }
+        return discount.calculateMembershipDiscount(totalPrice);
     }
 
     private Integer getTotalAmount() {
         int totalAmount = 0;
-        for (Map.Entry<String, Integer> entry : requestItems.entrySet()) {
-            String itemName = entry.getKey();
+        Map<Item, Integer> orderItems = scanItemInfo.getOrderItems();
+        for (Map.Entry<Item, Integer> entry : orderItems.entrySet()) {
+            Item item = entry.getKey();
             Integer quantity = entry.getValue();
-            totalAmount += inventory.getItem(itemName).getPrice() * quantity;
+            totalAmount += item.getPrice() * quantity;
         }
         return totalAmount;
     }
 
     private Integer getTotalCount() {
         int totalCount = 0;
-        for (Map.Entry<String, Integer> entry : requestItems.entrySet()) {
+        Map<Item, Integer> orderItems = scanItemInfo.getOrderItems();
+        for (Map.Entry<Item, Integer> entry : orderItems.entrySet()) {
             Integer quantity = entry.getValue();
             totalCount += quantity;
         }
         return totalCount;
     }
-    // 이것도 결제
-    public String issueReceipt() {
-        int totalAmount = getTotalAmount();
-        int totalCount = getTotalCount();
-        int promotionDiscountAmount = receivePromotionDiscount();
-        double membershipDiscountAmount = receiveMembershipDiscount();
+
+    public String issueReceipt(StoreInput input) {
         String membership = input.readMembershipDiscountRequest();
-        if(membership.equals("Y")){
+        addPromotedItemsToReceipt();
+        addUnpromotedItemsToReceipt();
+        addMembershipDiscountToReceipt(membership);
+        addNoMembershipDiscountToReceipt(membership);
+
+        receipt.addTotalPrice(getTotalCount(), getTotalAmount());
+        return receipt.issueReceipt();
+    }
+
+    private void addMembershipDiscountToReceipt(String isMembership) {
+        if(isMembership.equals("Y")){
             receipt.addTotalDiscount(receivePromotionDiscount(), receiveMembershipDiscount());
-            double totalPay = totalAmount - promotionDiscountAmount - membershipDiscountAmount;
+            double totalPay = getTotalAmount() - receivePromotionDiscount() - receiveMembershipDiscount();
             receipt.addResult(totalPay);
         }
-        if(membership.equals("N")){
+    }
+
+    private void addNoMembershipDiscountToReceipt(String isMembership) {
+        if(isMembership.equals("N")){
             receipt.addTotalDiscount(receivePromotionDiscount(), 0);
-            double totalPay = totalAmount - promotionDiscountAmount;
-            receipt.addResult(totalPay);
+            double totalPay = getTotalAmount() - receivePromotionDiscount();
         }
-        receipt.addTotalPrice(getTotalCount(), totalCount);
-        writeChangedContent();
-        return receipt.issueReceipt("W");
     }
 
-    // 이것도 결제
-    private void writeChangedContent() {
-        List<ItemDto> itemDtos = new ArrayList<>();
-        for (Map.Entry<String, Integer> entry : requestItems.entrySet()) {
-            String itemName = entry.getKey();
+    private void addPromotedItemsToReceipt() {
+        Map<Item, Integer> orderItems = scanItemInfo.getPromotedItems();
+        for (Map.Entry<Item, Integer> entry : orderItems.entrySet()) {
+            Item item = entry.getKey();
             Integer quantity = entry.getValue();
-            if(inventory.isItemInPromotion(itemName)) {
-                Item item = inventory.getItemWithPromotion(itemName);
-                itemDtos.add(new ItemDto(itemName, String.valueOf(item.getPrice()), String.valueOf(quantity),item.getPromotionName()));
-            }
-            if(!inventory.isItemInPromotion(itemName)) {
-                Item item = inventory.getItemWithoutPromotion(itemName);
-                itemDtos.add(new ItemDto(itemName, String.valueOf(item.getPrice()), String.valueOf(quantity),null));
-            }
+            int offerAmount = quantity / (item.getPromotionMinimumBuyCount() + item.getPromotionOfferCount());
+            receipt.addItemContent(item.getName(), quantity, item.getPrice());
+            receipt.addPromotionContent(item.getName(), offerAmount);
         }
-
-        String content = parser.parseItemDtosToText(itemDtos);
-        writer.write("products.md", content);
     }
 
-
-    public Integer receivePromotionDiscount() {
-        int totalDiscount = 0;
-        for (Map.Entry<String, Integer> entry : promotionItems.entrySet()) {
-            String itemName = entry.getKey();
+    private void addUnpromotedItemsToReceipt() {
+        Map<Item, Integer> orderItems = scanItemInfo.getUnpromotedItems();
+        for (Map.Entry<Item, Integer> entry : orderItems.entrySet()) {
+            Item item = entry.getKey();
             Integer quantity = entry.getValue();
-            totalDiscount += inventory.getItem(itemName).getPrice() * quantity;
+            receipt.addItemContent(item.getName(), quantity, item.getPrice());
         }
-        return totalDiscount;
     }
 
-
-    public Double receiveMembershipDiscount() {
-        int totalPrice = 0;
-        for (Map.Entry<String, Integer> entry : nonPromotionItems.entrySet()) {
-            String itemName = entry.getKey();
-            Integer quantity = entry.getValue();
-            totalPrice += inventory.getItem(itemName).getPrice() * quantity;
-        }
-        return discount.calculateMembershipDiscount(totalPrice);
-    }
 }

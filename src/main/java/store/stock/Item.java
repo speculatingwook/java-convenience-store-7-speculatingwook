@@ -69,6 +69,10 @@ public class Item {
         return promotion != null;
     }
 
+    public boolean isPromotionEventValid() {
+        return promotion.isPromotionValid();
+    }
+
     public String getPromotionName() {
         if(promotion == null) {
             return "";

@@ -28,13 +28,19 @@ public class PosMachine {
         for (Map.Entry<Item, Integer> entry : promotedItems.entrySet()) {
             Item item = entry.getKey();
             Integer quantity = entry.getValue();
-            offerMorePromotedItem(item, quantity, input);
-            checkPromotedItemLack(item, quantity, input);
+            checkPromotedItem(item, quantity, input);
         }
     }
 
     public ScanItemInfo getScanItemInfo() {
         return scanItemInfo;
+    }
+
+    private void checkPromotedItem(Item item, int quantity, StoreInput input) {
+        if(item.isPromotionEventValid()){
+            offerMorePromotedItem(item, quantity, input);
+            checkPromotedItemLack(item, quantity, input);
+        }
     }
 
     private void offerMorePromotedItem(Item item, Integer quantity, StoreInput input) {

@@ -49,8 +49,8 @@ public class Receipt {
         receiptContent.append(content);
     }
 
-    public String issueReceipt(String name) {
-        receiptContent.append("===========").append(name).append("===========").append("\n");
+    public String issueReceipt() {
+        receiptContent.append("===========").append("W").append("===========").append("\n");
         receiptContent.append(itemContent).append("\n");
         receiptContent.append(promotionContent).append("\n");
         receiptContent.append(totalContent).append("\n");
