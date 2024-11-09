@@ -41,6 +41,11 @@ public class Inventory {
         return inventory.get(itemWithPromotion) + inventory.get(itemWithoutPromotion);
     }
 
+    public boolean isItemInPromotion(String itemName) {
+        Item itemWithPromotion = getItemWithPromotion(itemName);
+        return !(itemWithPromotion == null);
+    }
+
 
     private void executeWhenPromotionInSufficient(Item itemWithPromotion, Item itemWithoutPromotion, int amount) {
         if(itemWithPromotion != null && inventory.get(itemWithPromotion) < amount) {
