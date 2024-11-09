@@ -1,4 +1,4 @@
-package store.service.reader;
+package store.io.reader;
 
 import java.io.*;
 

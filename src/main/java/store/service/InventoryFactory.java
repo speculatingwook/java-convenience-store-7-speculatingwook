@@ -7,9 +7,8 @@ import store.domain.Promotions;
 import store.dto.ItemDto;
 import store.dto.PromotionDto;
 import store.service.parser.Parser;
-import store.service.reader.Reader;
+import store.io.reader.Reader;
 
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;

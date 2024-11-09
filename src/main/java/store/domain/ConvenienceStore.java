@@ -1,25 +1,31 @@
 package store.domain;
 
+import store.dto.ItemDto;
+import store.io.writer.Writer;
 import store.service.discount.Discount;
+import store.service.parser.Parser;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
-//- [ ] 구매 상품 내역, 증정 상품 내역, 금액 정보가 담긴 영수증을 발행한다.
-//- [ ] 추가 구매 여부를 확인한다.
-//- [ ] 인벤토리의 변경 내역을 반영한다.
 public class ConvenienceStore {
     private final Inventory inventory;
     private final Receipt receipt;
     private final Discount discount;
+    private final Writer writer;
+    private final Parser parser;
     private final Map<String, Integer> requestItems;
     private final Map<String, Integer> promotionItems;
     private final Map<String, Integer> nonPromotionItems;
 
-    public ConvenienceStore(Inventory inventory, Receipt receipt, Discount discount) {
+    public ConvenienceStore(Inventory inventory, Receipt receipt, Discount discount, Writer writer, Parser parser) {
         this.inventory = inventory;
         this.receipt = receipt;
         this.discount = discount;
+        this.writer = writer;
+        this.parser = parser;
         this.requestItems = new HashMap<>();
         this.promotionItems = new HashMap<>();
         this.nonPromotionItems = new HashMap<>();
@@ -160,6 +166,25 @@ public class ConvenienceStore {
         receipt.addTotalDiscount(receivePromotionDiscount(), receiveMembershipDiscount());
         receipt.addResult(totalPay);
         return receipt;
+    }
+
+    private void writeChangedContent() {
+        List<ItemDto> itemDtos = new ArrayList<>();
+        for (Map.Entry<String, Integer> entry : requestItems.entrySet()) {
+            String itemName = entry.getKey();
+            Integer quantity = entry.getValue();
+            if(inventory.isItemInPromotion(itemName)) {
+                Item item = inventory.getItemWithPromotion(itemName);
+                itemDtos.add(new ItemDto(itemName, String.valueOf(item.getPrice()), String.valueOf(quantity),item.getPromotionName()));
+            }
+            if(!inventory.isItemInPromotion(itemName)) {
+                Item item = inventory.getItemWithoutPromotion(itemName);
+                itemDtos.add(new ItemDto(itemName, String.valueOf(item.getPrice()), String.valueOf(quantity),null));
+            }
+        }
+
+        String content = parser.parseItemDtosToText(itemDtos);
+        writer.write("products.md", content);
     }
 
 

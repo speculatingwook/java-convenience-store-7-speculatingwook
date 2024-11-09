@@ -8,6 +8,7 @@ import store.dto.PromotionDto;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class ConvenienceStoreParser implements Parser {
     private final List<ItemDto> itemDtos;
@@ -58,5 +59,17 @@ public class ConvenienceStoreParser implements Parser {
     public ItemDto parseToItemDto(String data) {
         List<String> split = Arrays.stream(data.split(",")).toList();
         return new ItemDto(split.get(0), split.get(1), split.get(2), split.get(3));
+    }
+
+    @Override
+    public String parseItemDtosToText(List<ItemDto> itemDtos) {
+        String header = "name,price,quantity,promotion";
+
+        String itemsText = itemDtos.stream()
+                .map(dto -> String.join(",", dto.name(), dto.price(), dto.quantity(),
+                        dto.promotion() != null ? dto.promotion() : "null"))
+                .collect(Collectors.joining("\n"));
+
+        return header + "\n" + itemsText;
     }
 }

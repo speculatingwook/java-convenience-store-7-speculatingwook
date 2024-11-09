@@ -67,6 +67,9 @@ public class Item {
         return promotion != null;
     }
 
+    public String getPromotionName() {
+        return promotion.getPromotionName();
+    }
 
     @Override
     public int hashCode() {

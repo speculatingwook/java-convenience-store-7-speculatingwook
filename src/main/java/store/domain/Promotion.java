@@ -68,6 +68,10 @@ public class Promotion {
         return offerCount;
     }
 
+    public String getPromotionName() {
+        return name;
+    }
+
     @Override
     public int hashCode() {
         return Objects.hashCode(name);
