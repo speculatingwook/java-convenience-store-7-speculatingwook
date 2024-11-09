@@ -1,12 +1,10 @@
-package store.service;
+package store.stock;
 
-import store.domain.Inventory;
-import store.domain.Item;
-import store.domain.Promotion;
-import store.domain.Promotions;
+import store.Promotion;
+import store.Promotions;
 import store.dto.ItemDto;
 import store.dto.PromotionDto;
-import store.service.parser.Parser;
+import store.parser.Parser;
 import store.io.reader.Reader;
 
 import java.util.HashMap;

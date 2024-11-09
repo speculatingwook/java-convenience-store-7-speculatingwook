@@ -1,7 +1,7 @@
-package store.domain;
+package store.stock;
 
 
-import store.service.parser.ConvenienceStoreParser;
+import store.parser.ConvenienceStoreParser;
 
 import java.util.HashMap;
 
@@ -54,6 +54,7 @@ public class Inventory {
             deductItemWhenAmountsCombined(itemWithPromotion,itemWithoutPromotion,amount);
         }
     }
+
     private void executeWhenPromotionSufficient(Item itemWithPromotion, int amount) {
         if (itemWithPromotion != null && inventory.get(itemWithPromotion) > amount) {
             deductItem(itemWithPromotion, amount);

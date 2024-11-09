@@ -1,4 +1,4 @@
-package store.domain;
+package store;
 
 import java.util.List;
 

@@ -1,9 +1,7 @@
-package store.domain;
+package store.payment;
 
 
-import store.service.parser.ConvenienceStoreParser;
-
-import static store.service.parser.ConvenienceStoreParser.formatNumberWithComma;
+import static store.parser.ConvenienceStoreParser.formatNumberWithComma;
 
 public class Receipt {
     private final StringBuilder receiptContent;

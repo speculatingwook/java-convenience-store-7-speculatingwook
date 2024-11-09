@@ -1,4 +1,6 @@
-package store.domain;
+package store.stock;
+
+import store.Promotion;
 
 import java.util.Objects;
 

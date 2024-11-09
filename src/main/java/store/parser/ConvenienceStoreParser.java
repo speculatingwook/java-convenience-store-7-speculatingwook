@@ -1,20 +1,15 @@
-package store.service.parser;
+package store.parser;
 
-import store.domain.Promotion;
-import store.domain.Item;
 import store.dto.ItemDto;
 import store.dto.PromotionDto;
 
 import java.text.DecimalFormat;
 import java.util.*;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 public class ConvenienceStoreParser implements Parser {
     private final List<ItemDto> itemDtos;
     private final List<PromotionDto> promotionDtos;
-    private static final Pattern REQUEST_INPUT_REGEX = Pattern.compile("\\[([가-힣\\w]+)-(\\d+)\\]");
 
     public ConvenienceStoreParser(String itemData, String promotionData) {
         this.itemDtos = parseToItemDtos(itemData);
@@ -78,16 +73,6 @@ public class ConvenienceStoreParser implements Parser {
     public static String formatNumberWithComma(int number) {
         DecimalFormat decimalFormat = new DecimalFormat("#,###");
         return decimalFormat.format(number);
-    }
-
-    public static Map<String, Integer> parseRequestToMap(String data) {
-        return Arrays.stream(data.split(","))
-                .map(REQUEST_INPUT_REGEX::matcher)
-                .filter(Matcher::find)
-                .collect(Collectors.toMap(
-                        m -> m.group(1),
-                        m -> Integer.parseInt(m.group(2))
-                ));
     }
 
 }

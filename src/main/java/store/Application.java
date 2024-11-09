@@ -1,19 +1,18 @@
 package store;
 
-import store.domain.ConvenienceStore;
-import store.domain.Inventory;
-import store.domain.Receipt;
+import store.stock.Inventory;
+import store.payment.Receipt;
 import store.io.StoreInput;
 import store.io.StoreView;
 import store.io.reader.FileReader;
 import store.io.reader.Reader;
 import store.io.writer.FileWriter;
 import store.io.writer.Writer;
-import store.service.InventoryFactory;
-import store.service.discount.ConvenienceStoreDiscount;
-import store.service.discount.Discount;
-import store.service.parser.ConvenienceStoreParser;
-import store.service.parser.Parser;
+import store.stock.InventoryFactory;
+import store.payment.discount.ConvenienceStoreDiscount;
+import store.payment.discount.Discount;
+import store.parser.ConvenienceStoreParser;
+import store.parser.Parser;
 
 import java.util.Map;
 

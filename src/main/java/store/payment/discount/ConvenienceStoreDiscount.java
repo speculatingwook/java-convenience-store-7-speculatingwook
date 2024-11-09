@@ -1,7 +1,7 @@
-package store.service.discount;
+package store.payment.discount;
 
-import store.domain.Inventory;
-import store.domain.Item;
+import store.stock.Inventory;
+import store.stock.Item;
 
 public class ConvenienceStoreDiscount implements Discount {
     private final Integer discountPercentage;

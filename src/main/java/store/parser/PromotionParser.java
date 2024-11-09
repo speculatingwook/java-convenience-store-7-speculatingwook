@@ -1,4 +1,4 @@
-package store.service.parser;
+package store.parser;
 
 
 import store.dto.PromotionDto;
