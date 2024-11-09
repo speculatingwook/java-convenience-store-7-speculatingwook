@@ -34,18 +34,20 @@ public class ConvenienceStore {
         this.nonPromotionItems = new HashMap<>();
     }
 
-    public void scan(Map<String, Integer> requestItems) {
-        this.requestItems.putAll(requestItems);
+    public void scan(Map<String, Integer> request) {
+        this.requestItems.putAll(request);
         for (Map.Entry<String, Integer> entry : requestItems.entrySet()) {
             String itemName = entry.getKey();
             Integer quantity = entry.getValue();
-            if (isRequestAmountCanOfferPromotion(itemName, quantity)) {
-                String isAdditionalRequest = input.readMoreStockForDiscountRequest(itemName);
-                offerMoreItemWhenPromotionCanbeOffered(isAdditionalRequest, itemName);
-            }
-            if(isPromotionAmountLack(itemName, quantity)) {
-                String anotherInputThatReceiveYorN = input.readFullPricePaymentRequest(itemName, quantity - discount.calculatePromotionItemCount(itemName, quantity));
-                executeWhenPromotionLack(anotherInputThatReceiveYorN, itemName, quantity);
+            if(inventory.getItemWithPromotion(itemName) != null){
+                if (isRequestAmountCanOfferPromotion(itemName, quantity)) {
+                    String isAdditionalRequest = input.readMoreStockForDiscountRequest(itemName);
+                    offerMoreItemWhenPromotionCanbeOffered(isAdditionalRequest, itemName);
+                }
+                if(isPromotionAmountLack(itemName, quantity)) {
+                    String anotherInputThatReceiveYorN = input.readFullPricePaymentRequest(itemName, quantity - discount.calculatePromotionItemCount(itemName, quantity));
+                    executeWhenPromotionLack(anotherInputThatReceiveYorN, itemName, quantity);
+                }
             }
         }
     }
@@ -158,16 +160,25 @@ public class ConvenienceStore {
         return totalCount;
     }
 
-    public void issueReceipt() {
+    public String issueReceipt() {
         int totalAmount = getTotalAmount();
         int totalCount = getTotalCount();
         int promotionDiscountAmount = receivePromotionDiscount();
         double membershipDiscountAmount = receiveMembershipDiscount();
-        double totalPay = totalAmount - promotionDiscountAmount - membershipDiscountAmount;
-        receipt.addTotalPrice(getTotalCount(), getTotalAmount());
-        receipt.addTotalDiscount(receivePromotionDiscount(), receiveMembershipDiscount());
-        receipt.addResult(totalPay);
+        String membership = input.readMembershipDiscountRequest();
+        if(membership.equals("Y")){
+            receipt.addTotalDiscount(receivePromotionDiscount(), receiveMembershipDiscount());
+            double totalPay = totalAmount - promotionDiscountAmount - membershipDiscountAmount;
+            receipt.addResult(totalPay);
+        }
+        if(membership.equals("N")){
+            receipt.addTotalDiscount(receivePromotionDiscount(), 0);
+            double totalPay = totalAmount - promotionDiscountAmount;
+            receipt.addResult(totalPay);
+        }
+        receipt.addTotalPrice(getTotalCount(), totalCount);
         writeChangedContent();
+        return receipt.issueReceipt("W");
     }
 
     private void writeChangedContent() {

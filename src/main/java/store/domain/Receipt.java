@@ -1,5 +1,10 @@
 package store.domain;
 
+
+import store.service.parser.ConvenienceStoreParser;
+
+import static store.service.parser.ConvenienceStoreParser.formatNumberWithComma;
+
 public class Receipt {
     private final StringBuilder receiptContent;
     private final StringBuilder itemContent;
@@ -12,6 +17,7 @@ public class Receipt {
         this.itemContent = new StringBuilder();
         this.promotionContent = new StringBuilder();
         this.totalContent = new StringBuilder();
+        init();
     }
 
     private void init() {
@@ -34,11 +40,11 @@ public class Receipt {
 
     public void addTotalDiscount(int totalPromotionDiscount, double totalMembershipDiscount) {
         totalContent.append("행사할인").append("\t\t").append("-").append(totalPromotionDiscount).append("\n");
-        totalContent.append("멤버십할인").append("\t\t").append("-").append(totalMembershipDiscount).append("\n");
+        totalContent.append("멤버십할인").append("\t\t").append("-").append(formatNumberWithComma((int) totalMembershipDiscount)).append("\n");
     }
 
     public void addResult(double totalPrice) {
-        totalContent.append("내실돈").append("\t\t").append(totalPrice).append("\n");
+        totalContent.append("내실돈").append("\t\t").append(formatNumberWithComma((int) totalPrice)).append("\n");
     }
 
     public void addReceiptContent(String content) {

@@ -14,7 +14,7 @@ import java.util.stream.Collectors;
 public class ConvenienceStoreParser implements Parser {
     private final List<ItemDto> itemDtos;
     private final List<PromotionDto> promotionDtos;
-    private static final Pattern REQUEST_INPUT_REGEX = Pattern.compile("(\\w+)-(\\d+)");
+    private static final Pattern REQUEST_INPUT_REGEX = Pattern.compile("\\[([가-힣\\w]+)-(\\d+)\\]");
 
     public ConvenienceStoreParser(String itemData, String promotionData) {
         this.itemDtos = parseToItemDtos(itemData);

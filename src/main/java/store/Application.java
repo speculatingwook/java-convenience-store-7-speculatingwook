@@ -37,8 +37,8 @@ public class Application {
         Map<String, Integer> parsedInput = ConvenienceStoreParser.parseRequestToMap(itemRequest);
         convenienceStore.scan(parsedInput);
         convenienceStore.addItemsToCart();
-        convenienceStore.issueReceipt();
 
-        view.printReceipt(receipt.toString());
+
+        view.printReceipt(convenienceStore.issueReceipt());
     }
 }

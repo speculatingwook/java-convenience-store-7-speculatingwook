@@ -102,13 +102,40 @@ public class Inventory {
     public String toString() {
         StringBuilder currentStock = new StringBuilder();
         for(Item item : inventory.keySet()) {
-            currentStock.append("- ")
-                    .append(item.getName())
-                    .append(" ")
-                    .append(ConvenienceStoreParser.formatNumberWithComma(item.getPrice())).append("원 ")
-                    .append(inventory.get(item)).append("개").append(" ")
-                    .append(item.getPromotionName()).append("\n");
+            currentStock.append(addDefaultInfo(item))
+                    .append(addStockCountInfo(item))
+                    .append(addPromotionInfo(item));
         }
         return currentStock.toString();
+    }
+
+    private StringBuilder addPromotionInfo(Item item) {
+        StringBuilder promotionInfo = new StringBuilder();
+        promotionInfo.append(" ")
+                .append(item.getPromotionName())
+                .append("\n");
+        return promotionInfo;
+    }
+
+    private StringBuilder addStockCountInfo(Item item) {
+        StringBuilder stockCount = new StringBuilder();
+        Integer count = inventory.get(item);
+        if (!count.equals(0)) {
+            stockCount.append(inventory.get(item)).append("개");
+        }
+        if (count.equals(0)){
+            stockCount.append("재고 없음");
+        }
+        return stockCount;
+    }
+
+    private StringBuilder addDefaultInfo(Item item) {
+        StringBuilder defaultInfo = new StringBuilder();
+        defaultInfo.append("- ")
+                .append(item.getName())
+                .append(" ")
+                .append(ConvenienceStoreParser.formatNumberWithComma(item.getPrice()))
+                .append("원 ");
+        return defaultInfo;
     }
 }
