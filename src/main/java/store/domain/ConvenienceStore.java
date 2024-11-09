@@ -31,4 +31,13 @@ public class ConvenienceStore {
         return count % (minimumBuyCount + offerCount) == minimumBuyCount;
     }
 
+    public boolean isPromotionAmountLack(String itemName, int count) {
+        Item promotionItem = inventory.getItemWithPromotion(itemName);
+        if(!promotionItem.isPromotionPresent()) {
+            return false;
+        }
+        // Discount 리팩토링 필요
+        return discount.calculatePromotionItemCount(itemName, 0) >= count;
+    }
+
 }
