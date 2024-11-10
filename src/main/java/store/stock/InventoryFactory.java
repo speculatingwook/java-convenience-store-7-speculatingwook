@@ -1,7 +1,5 @@
 package store.stock;
 
-import store.Promotion;
-import store.Promotions;
 import store.dto.ItemDto;
 import store.dto.PromotionDto;
 import store.io.reader.Reader;

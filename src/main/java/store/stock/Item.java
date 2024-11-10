@@ -1,7 +1,5 @@
 package store.stock;
 
-import store.Promotion;
-
 import java.util.Objects;
 
 public class Item {
