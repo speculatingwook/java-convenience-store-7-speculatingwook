@@ -2,6 +2,7 @@ package store.payment;
 
 import store.io.StoreInput;
 import store.payment.discount.Discount;
+import store.pos.OrderItemInfo;
 import store.pos.ScanItemInfo;
 import store.stock.Item;
 import java.util.Map;
@@ -9,20 +10,17 @@ import java.util.Map;
 public class Payment {
     private final Receipt receipt;
     private final Discount discount;
-    private ScanItemInfo scanItemInfo;
+    private final OrderItemInfo orderItemInfo;
 
-    public Payment(Receipt receipt, Discount discount) {
+    public Payment(Receipt receipt, Discount discount, OrderItemInfo orderItemInfo) {
         this.receipt = receipt;
         this.discount = discount;
-    }
-
-    public void receiveData(ScanItemInfo scanItemInfo) {
-        this.scanItemInfo = scanItemInfo;
+        this.orderItemInfo = orderItemInfo;
     }
 
     public Integer receivePromotionDiscount() {
         int totalDiscount = 0;
-        Map<Item, Integer> promotedItems = scanItemInfo.getPromotedItems();
+        Map<Item, Integer> promotedItems = orderItemInfo.getPromotedItems();
         for (Map.Entry<Item, Integer> entry : promotedItems.entrySet()) {
             Item item = entry.getKey();
             Integer quantity = entry.getValue();
@@ -33,7 +31,7 @@ public class Payment {
 
     public Double receiveMembershipDiscount() {
         int totalPrice = 0;
-        Map<Item, Integer> unpromotedItems = scanItemInfo.getUnpromotedItems();
+        Map<Item, Integer> unpromotedItems = orderItemInfo.getUnpromotedItems();
         for (Map.Entry<Item, Integer> entry : unpromotedItems.entrySet()) {
             Item item = entry.getKey();
             Integer quantity = entry.getValue();
@@ -44,7 +42,7 @@ public class Payment {
 
     private Integer getTotalAmount() {
         int totalAmount = 0;
-        Map<Item, Integer> orderItems = scanItemInfo.getOrderItems();
+        Map<Item, Integer> orderItems = orderItemInfo.getOrderItems();
         for (Map.Entry<Item, Integer> entry : orderItems.entrySet()) {
             Item item = entry.getKey();
             Integer quantity = entry.getValue();
@@ -55,7 +53,7 @@ public class Payment {
 
     private Integer getTotalCount() {
         int totalCount = 0;
-        Map<Item, Integer> orderItems = scanItemInfo.getOrderItems();
+        Map<Item, Integer> orderItems = orderItemInfo.getOrderItems();
         for (Map.Entry<Item, Integer> entry : orderItems.entrySet()) {
             Integer quantity = entry.getValue();
             totalCount += quantity;
@@ -90,7 +88,7 @@ public class Payment {
     }
 
     private void addPromotedItemsToReceipt() {
-        Map<Item, Integer> orderItems = scanItemInfo.getPromotedItems();
+        Map<Item, Integer> orderItems = orderItemInfo.getPromotedItems();
         for (Map.Entry<Item, Integer> entry : orderItems.entrySet()) {
             Item item = entry.getKey();
             Integer quantity = entry.getValue();
@@ -101,7 +99,7 @@ public class Payment {
     }
 
     private void addUnpromotedItemsToReceipt() {
-        Map<Item, Integer> orderItems = scanItemInfo.getUnpromotedItems();
+        Map<Item, Integer> orderItems = orderItemInfo.getUnpromotedItems();
         for (Map.Entry<Item, Integer> entry : orderItems.entrySet()) {
             Item item = entry.getKey();
             Integer quantity = entry.getValue();

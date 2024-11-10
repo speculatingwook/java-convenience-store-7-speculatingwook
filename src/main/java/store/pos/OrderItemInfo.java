@@ -22,6 +22,13 @@ public class OrderItemInfo {
         return unpromotedItems;
     }
 
+    public Map<Item, Integer> getOrderItems() {
+        Map<Item, Integer> orderItems = new HashMap<>();
+        orderItems.putAll(promotedItems);
+        orderItems.putAll(unpromotedItems);
+        return orderItems;
+    }
+
     public void updatePromotedItem(Item item, int count) {
         if(promotedItems.containsKey(item)) {
             promotedItems.put(item, promotedItems.get(item) + count);
