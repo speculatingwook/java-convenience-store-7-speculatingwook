@@ -1,8 +1,7 @@
-package store.domain;
+package store.stock;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import store.stock.Promotion;
 
 import static org.junit.jupiter.api.Assertions.*;
 

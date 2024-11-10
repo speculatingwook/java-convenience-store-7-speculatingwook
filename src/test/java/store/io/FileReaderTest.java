@@ -1,4 +1,4 @@
-package store.service;
+package store.io;
 
 import org.junit.jupiter.api.Test;
 import store.io.reader.FileReader;
