@@ -7,6 +7,8 @@ import store.io.reader.FileReader;
 import store.io.reader.Reader;
 import store.parser.ConvenienceStoreParser;
 import store.parser.Parser;
+import store.payment.Payment;
+import store.payment.Receipt;
 import store.payment.discount.ConvenienceStoreDiscount;
 import store.payment.discount.Discount;
 import store.pos.Cart;
@@ -51,10 +53,14 @@ public class StoreConfig {
         Container.register(PosMachine.class, retryOnFail(()-> tryCreatePosMachine(inventory, view, input)));
     }
 
-    public void registerDiscountServices() {
+    public void registerPaymentServices() {
         Container.register(Discount.class, () ->
                 new ConvenienceStoreDiscount(MEMBERSHIP_DISCOUNT_RATE, Container.getInstance(Inventory.class))
         );
+        Container.register(Payment.class, ()-> {
+            Receipt receipt = new Receipt();
+            return new Payment(receipt, Container.getInstance(Discount.class));
+        });
     }
 
     private PosMachine tryCreatePosMachine(Inventory inventory, StoreView view, StoreInput input) {

@@ -10,11 +10,14 @@ import java.util.Map;
 public class Payment {
     private final Receipt receipt;
     private final Discount discount;
-    private final OrderItemInfo orderItemInfo;
+    private OrderItemInfo orderItemInfo;
 
-    public Payment(Receipt receipt, Discount discount, OrderItemInfo orderItemInfo) {
+    public Payment(Receipt receipt, Discount discount) {
         this.receipt = receipt;
         this.discount = discount;
+    }
+
+    public void receiveOrderItemInfo(OrderItemInfo orderItemInfo) {
         this.orderItemInfo = orderItemInfo;
     }
 

@@ -17,16 +17,14 @@ public class Application {
         YesNoOption option = Container.getInstance(YesNoOption.class);
 
         PosMachine posMachine = Container.getInstance(PosMachine.class);
+        Payment payment = Container.getInstance(Payment.class);
+
         posMachine.scanCartItems();
         posMachine.updateOrderItemInfo(option);
         OrderItemInfo orderItemInfo = posMachine.getOrderItemInfo();
 
-        Container.register(Payment.class, ()-> {
-            Receipt receipt = new Receipt();
-            return new Payment(receipt, Container.getInstance(Discount.class), orderItemInfo);
-        });
+        payment.receiveOrderItemInfo(orderItemInfo);
 
-        Payment payment = Container.getInstance(Payment.class);
         view.printReceipt(payment.issueReceipt(option));
         Container.reset();
     }
@@ -37,7 +35,7 @@ public class Application {
         storeConfig.registerStockServices();
         storeConfig.registerParser();
         storeConfig.registerPosServices();
-        storeConfig.registerDiscountServices();
+        storeConfig.registerPaymentServices();
     }
 
 }
