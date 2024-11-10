@@ -1,29 +1,34 @@
 package store.io.reader;
 
 import java.io.*;
+import java.util.stream.Collectors;
 
 public class FileReader implements Reader {
 
     @Override
     public String read(String fileName) {
-        StringBuilder content = new StringBuilder();
-
-        try (InputStream inputStream = FileReader.class.getClassLoader().getResourceAsStream(fileName)) {
-            assert inputStream != null;
-            try (BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream))) {
-
-                String line;
-                while ((line = reader.readLine()) != null) {
-                    content.append(line).append("\n");
-                }
-
-            }
-        } catch (IOException | NullPointerException e) {
-            System.out.println(e.getMessage());
+        InputStream inputStream = getInputStream(fileName);
+        if (inputStream == null) {
             return null;
         }
+        return readFile(inputStream);
+    }
 
-        return content.toString();
+    private InputStream getInputStream(String fileName) {
+        InputStream inputStream = FileReader.class.getClassLoader().getResourceAsStream(fileName);
+        if (inputStream == null) {
+            System.out.println("File not found: " + fileName);
+        }
+        return inputStream;
+    }
+
+    private String readFile(InputStream inputStream) {
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream))) {
+            return reader.lines().collect(Collectors.joining("\n"));
+        } catch (IOException e) {
+            System.out.println("Error reading file: " + e.getMessage());
+            return null;
+        }
     }
 
 }
