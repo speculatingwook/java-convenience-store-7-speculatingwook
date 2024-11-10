@@ -11,6 +11,7 @@ public class PosMachine {
     private final Cart cart;
     private final Inventory inventory;
     private final ScanItemInfo scanItemInfo;
+    private OrderItemInfo orderItemInfo;
 
     public PosMachine(PosScanner scanner, Cart cart, Inventory inventory, ScanItemInfo scanItemInfo) {
         this.scanner = scanner;
@@ -21,15 +22,17 @@ public class PosMachine {
 
     public void scanCartItems() {
         scanner.scanItems(cart.getCartItems());
+        this.orderItemInfo = new OrderItemInfo(scanItemInfo);
     }
 
-    public void updateScanItemInfo(StoreInput input) {
+    public OrderItemInfo createOrderItemInfo(StoreInput input) {
         Map<Item, Integer> promotedItems =  scanItemInfo.getPromotedItems();
         for (Map.Entry<Item, Integer> entry : promotedItems.entrySet()) {
             Item item = entry.getKey();
             Integer quantity = entry.getValue();
             checkPromotedItem(item, quantity, input);
         }
+        return orderItemInfo;
     }
 
     public ScanItemInfo getScanItemInfo() {
@@ -48,7 +51,7 @@ public class PosMachine {
             String yesOrNo = input.readMoreStockForDiscountRequest(item.getName());
 
             if(yesOrNo.equals("Y")) {
-                scanItemInfo.updatePromotedItem(item, quantity);
+                orderItemInfo.updatePromotedItem(item, quantity);
             }
         }
     }
@@ -65,7 +68,7 @@ public class PosMachine {
         if(yesOrNo.equals("Y")) {
             Integer totalStock = inventory.getTotalAmount(item.getName());
             Integer nonPromotionAmount = totalStock - getPromotedItemMaxSellCount(item.getName());
-            scanItemInfo.updateUnPromotedItem(item, nonPromotionAmount);
+            orderItemInfo.updateUnPromotedItem(item, nonPromotionAmount);
         }
     }
 

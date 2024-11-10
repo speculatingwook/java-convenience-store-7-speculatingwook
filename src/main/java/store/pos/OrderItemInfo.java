@@ -5,13 +5,13 @@ import store.stock.Item;
 import java.util.HashMap;
 import java.util.Map;
 
-public class ScanItemInfo {
+public class OrderItemInfo {
     private final Map<Item, Integer> promotedItems;
     private final Map<Item, Integer> unpromotedItems;
 
-    public ScanItemInfo() {
-        this.promotedItems = new HashMap<>();
-        this.unpromotedItems = new HashMap<>();
+    public OrderItemInfo(ScanItemInfo scanItemInfo) {
+        this.promotedItems = scanItemInfo.getPromotedItems();
+        this.unpromotedItems = scanItemInfo.getUnpromotedItems();
     }
 
     public Map<Item, Integer> getPromotedItems() {
