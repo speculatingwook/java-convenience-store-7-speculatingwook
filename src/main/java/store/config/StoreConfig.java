@@ -2,6 +2,7 @@ package store.config;
 
 import store.io.StoreInput;
 import store.io.StoreView;
+import store.io.YesNoOption;
 import store.io.reader.FileReader;
 import store.io.reader.Reader;
 import store.parser.ConvenienceStoreParser;
@@ -29,6 +30,7 @@ public class StoreConfig {
         );
         Container.register(StoreView.class, StoreView::new);
         Container.register(StoreInput.class, ()-> new StoreInput(Container.getInstance(StoreView.class)));
+        Container.register(YesNoOption.class, ()-> new YesNoOption(Container.getInstance(StoreInput.class)));
     }
 
 }

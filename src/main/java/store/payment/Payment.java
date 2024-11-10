@@ -1,6 +1,6 @@
 package store.payment;
 
-import store.io.StoreInput;
+import store.io.YesNoOption;
 import store.payment.discount.Discount;
 import store.pos.OrderItemInfo;
 import store.stock.Item;
@@ -17,12 +17,11 @@ public class Payment {
         this.orderItemInfo = orderItemInfo;
     }
 
-    public String issueReceipt(StoreInput input) {
-        String isMemberShip = input.readMembershipDiscountRequest();
+    public String issueReceipt(YesNoOption option) {
         int promotionDiscountAmount = discount.receivePromotionDiscount(orderItemInfo.getPromotedItems());
         double membershipDiscountAmount = discount.receiveMembershipDiscount(orderItemInfo.getUnpromotedItems());
         addItemsToReceipt();
-        addDiscountsToReceipt(isMemberShip, promotionDiscountAmount, membershipDiscountAmount);
+        addDiscountsToReceipt(option, promotionDiscountAmount, membershipDiscountAmount);
 
         receipt.addTotalPrice(getTotalCount(), getTotalAmount());
         return receipt.issueReceipt();
@@ -33,26 +32,26 @@ public class Payment {
         addUnpromotedItemsToReceipt();
     }
 
-    private void addDiscountsToReceipt(String isMembership, Integer discountAmount, Double membershipDiscountAmount) {
-        if(isMembership.equals("Y")){
-            addMembershipDiscountToReceipt(isMembership, discountAmount, membershipDiscountAmount);
+    private void addDiscountsToReceipt(YesNoOption option, Integer discountAmount, Double membershipDiscountAmount) {
+        boolean isMembership = option.getMembershipDiscount();
+        if(isMembership){
+            addMembershipDiscountToReceipt(discountAmount, membershipDiscountAmount);
         }
-        if(isMembership.equals("N")){
-            addDefaultDiscountToReceipt(isMembership, discountAmount);
+        if(!isMembership){
+            addDefaultDiscountToReceipt(discountAmount);
         }
     }
 
-    private void addMembershipDiscountToReceipt(String isMembership, Integer promotionDiscountAmount, Double membershipDiscountAmount) {
+    private void addMembershipDiscountToReceipt(Integer promotionDiscountAmount, Double membershipDiscountAmount) {
         receipt.addTotalDiscount(promotionDiscountAmount, membershipDiscountAmount);
         double totalPay = getTotalAmount() - promotionDiscountAmount - membershipDiscountAmount;
         receipt.addResult(totalPay);
     }
 
-    private void addDefaultDiscountToReceipt(String isMembership, Integer promotionDiscountAmount) {
+    private void addDefaultDiscountToReceipt(Integer promotionDiscountAmount) {
         receipt.addTotalDiscount(promotionDiscountAmount, 0);
         double totalPay = getTotalAmount() - promotionDiscountAmount;
         receipt.addResult(totalPay);
-
     }
 
     private void addPromotedItemsToReceipt() {

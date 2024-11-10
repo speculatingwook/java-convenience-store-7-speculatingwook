@@ -1,8 +1,8 @@
 package store.pos;
 
+import store.io.YesNoOption;
 import store.stock.Inventory;
 import store.stock.Item;
-import store.io.StoreInput;
 
 import java.util.Map;
 
@@ -28,7 +28,7 @@ public class PosMachine {
     }
 
     private void isItemNameCorrect(String itemName) {
-        if(!inventory.isItemPresent(itemName)) {
+        if (!inventory.isItemPresent(itemName)) {
             throw new IllegalArgumentException("[ERROR] 요청하신 항목이 재고에 없습니다. 이름을 확인해주세요.");
         }
     }
@@ -44,47 +44,34 @@ public class PosMachine {
         this.orderItemInfo = new OrderItemInfo(scanItemInfo.getPromotedItems(), scanItemInfo.getUnpromotedItems());
     }
 
-    public OrderItemInfo updateOrderItemInfo(StoreInput input) {
-        Map<Item, Integer> promotedItems =  orderItemInfo.getPromotedItems();
+    public void updateOrderItemInfo(YesNoOption option) {
+        Map<Item, Integer> promotedItems = orderItemInfo.getPromotedItems();
         for (Map.Entry<Item, Integer> entry : promotedItems.entrySet()) {
             Item item = entry.getKey();
             Integer quantity = entry.getValue();
-            checkPromotedItem(item, quantity, input);
+            checkPromotedItem(item, quantity, option);
         }
-        return orderItemInfo;
     }
 
     public OrderItemInfo getOrderItemInfo() {
         return orderItemInfo;
     }
 
-    private void checkPromotedItem(Item item, int quantity, StoreInput input) {
-        if(item.isPromotionEventValid()){
-            offerMorePromotedItem(item, quantity, input);
-            checkPromotedItemLack(item, quantity, input);
+    private void checkPromotedItem(Item item, int quantity, YesNoOption option) {
+        if (item.isPromotionEventValid()) {
+            offerMorePromotedItem(item, quantity, option);
+            checkPromotedItemLack(item, quantity, option);
         }
     }
 
-    private void offerMorePromotedItem(Item item, Integer quantity, StoreInput input) {
-        if(canOfferMorePromotions(item, quantity)) {
-            String yesOrNo = input.readMoreStockForDiscountRequest(item.getName());
-
-            if(yesOrNo.equals("Y")) {
-                orderItemInfo.updatePromotedItem(item, quantity);
-            }
+    private void offerMorePromotedItem(Item item, Integer quantity, YesNoOption option) {
+        if (canOfferMorePromotions(item, quantity) && option.isMoreStockRequest(item.getName())) {
+            orderItemInfo.updatePromotedItem(item, quantity);
         }
     }
 
-    private void checkPromotedItemLack(Item item, Integer quantity, StoreInput input) {
-        if(isPromotedAmountLack(item.getName(), quantity)){
-            int unpromotedQuantity = quantity - getPromotedItemMaxSellCount(item.getName());
-            String yesOrNo = input.readFullPricePaymentRequest(item.getName(), unpromotedQuantity);
-            updatePromotedItemToUnpromotedItem(yesOrNo, item);
-        }
-    }
-
-    private void updatePromotedItemToUnpromotedItem(String yesOrNo, Item item) {
-        if(yesOrNo.equals("Y")) {
+    private void checkPromotedItemLack(Item item, Integer quantity, YesNoOption option) {
+        if (isPromotedAmountLack(item.getName(), quantity) && option.confirmPayWithNoPromotion(item.getName(), quantity)) {
             Integer totalStock = inventory.getTotalAmount(item.getName());
             Integer nonPromotionAmount = totalStock - getPromotedItemMaxSellCount(item.getName());
             orderItemInfo.updateUnPromotedItem(item, nonPromotionAmount);
@@ -92,7 +79,7 @@ public class PosMachine {
     }
 
     public boolean canOfferMorePromotions(Item item, int count) {
-        if(!item.isPromotionPresent()) {
+        if (!item.isPromotionPresent()) {
             return false;
         }
 
@@ -103,7 +90,7 @@ public class PosMachine {
 
     public boolean isPromotedAmountLack(String itemName, int count) {
         Item promotionItem = inventory.getItemWithPromotion(itemName);
-        if(!promotionItem.isPromotionPresent()) {
+        if (!promotionItem.isPromotionPresent()) {
             return false;
         }
 

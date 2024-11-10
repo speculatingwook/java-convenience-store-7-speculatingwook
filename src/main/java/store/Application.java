@@ -2,6 +2,7 @@ package store;
 
 import store.config.Container;
 import store.io.StoreInput;
+import store.io.StoreView;
 import store.pos.Cart;
 import store.pos.PosMachine;
 import store.pos.PosScanner;
@@ -13,11 +14,16 @@ import java.util.function.Supplier;
 public class Application {
     public static void main(String[] args) {
         StoreInput input = Container.getInstance(StoreInput.class);
-        Container.register(PosMachine.class, retryOnFail(() -> {
-            Cart cart = new Cart(input.readItemRequest());
-            return new PosMachine(Container.getInstance(Inventory.class), Container.getInstance(PosScanner.class), cart);
-        }));
+        StoreView view = Container.getInstance(StoreView.class);
+        Inventory inventory = Container.getInstance(Inventory.class);
+        PosScanner posScanner = Container.getInstance(PosScanner.class);
 
+        Container.register(PosMachine.class, retryOnFail(() -> {
+            view.printCurrentStock(inventory.toString());
+            Cart cart = new Cart(input.readItemRequest());
+            return new PosMachine(inventory, posScanner, cart);
+        }));
+        PosMachine posMachine = Container.getInstance(PosMachine.class);
 
     }
 
