@@ -12,18 +12,19 @@ public class PosScanner {
     private final Inventory inventory;
     private final ScanItemInfo scanItemInfo;
 
-    public PosScanner(Inventory inventory, ScanItemInfo scanItemInfo) {
+    public PosScanner(Inventory inventory) {
         this.inventory = inventory;
-        this.scanItemInfo = scanItemInfo;
+        this.scanItemInfo = new ScanItemInfo();
     }
 
-    public void scanItems(Map<String, Integer> items) {
+    public ScanItemInfo scanItems(Map<String, Integer> items) {
         for (Map.Entry<String, Integer> entry : items.entrySet()) {
             String itemName = entry.getKey();
             Integer itemCount = entry.getValue();
             classifyUnpromotedItems(itemName, itemCount);
             classifyPromotedItems(itemName, itemCount);
         }
+        return scanItemInfo;
     }
 
     private void classifyUnpromotedItems(String itemName, Integer itemCount) {

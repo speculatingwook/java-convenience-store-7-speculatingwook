@@ -9,9 +9,9 @@ public class OrderItemInfo {
     private final Map<Item, Integer> promotedItems;
     private final Map<Item, Integer> unpromotedItems;
 
-    public OrderItemInfo(ScanItemInfo scanItemInfo) {
-        this.promotedItems = scanItemInfo.getPromotedItems();
-        this.unpromotedItems = scanItemInfo.getUnpromotedItems();
+    public OrderItemInfo(Map<Item, Integer> promotedItems, Map<Item, Integer> unpromotedItems) {
+        this.promotedItems = promotedItems;
+        this.unpromotedItems = unpromotedItems;
     }
 
     public Map<Item, Integer> getPromotedItems() {

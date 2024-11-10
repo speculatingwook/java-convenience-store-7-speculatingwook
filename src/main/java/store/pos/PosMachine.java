@@ -10,23 +10,21 @@ public class PosMachine {
     private final PosScanner scanner;
     private final Cart cart;
     private final Inventory inventory;
-    private final ScanItemInfo scanItemInfo;
     private OrderItemInfo orderItemInfo;
 
-    public PosMachine(PosScanner scanner, Cart cart, Inventory inventory, ScanItemInfo scanItemInfo) {
+    public PosMachine(PosScanner scanner, Cart cart, Inventory inventory) {
         this.scanner = scanner;
         this.cart = cart;
         this.inventory = inventory;
-        this.scanItemInfo = scanItemInfo;
     }
 
     public void scanCartItems() {
-        scanner.scanItems(cart.getCartItems());
-        this.orderItemInfo = new OrderItemInfo(scanItemInfo);
+        ScanItemInfo scanItemInfo = scanner.scanItems(cart.getCartItems());
+        this.orderItemInfo = new OrderItemInfo(scanItemInfo.getPromotedItems(), scanItemInfo.getUnpromotedItems());
     }
 
-    public OrderItemInfo createOrderItemInfo(StoreInput input) {
-        Map<Item, Integer> promotedItems =  scanItemInfo.getPromotedItems();
+    public OrderItemInfo updateOrderItemInfo(StoreInput input) {
+        Map<Item, Integer> promotedItems =  orderItemInfo.getPromotedItems();
         for (Map.Entry<Item, Integer> entry : promotedItems.entrySet()) {
             Item item = entry.getKey();
             Integer quantity = entry.getValue();
@@ -35,8 +33,8 @@ public class PosMachine {
         return orderItemInfo;
     }
 
-    public ScanItemInfo getScanItemInfo() {
-        return scanItemInfo;
+    public OrderItemInfo getOrderItemInfo() {
+        return orderItemInfo;
     }
 
     private void checkPromotedItem(Item item, int quantity, StoreInput input) {
