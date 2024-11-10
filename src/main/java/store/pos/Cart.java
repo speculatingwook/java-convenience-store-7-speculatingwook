@@ -7,30 +7,24 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 public class Cart {
-    private final Map<String, Integer> requestItems;
-    private static final Pattern REQUEST_INPUT_REGEX = Pattern.compile("\\[([가-힣\\w]+)-(\\d+)\\]");
+    private static final Pattern IS_FORMAT_CORRECT = Pattern.compile("^\\[([가-힣\\w]+)-(\\d+)](,\\[([가-힣\\w]+)-(\\d+)])*$");
+    private static final Pattern PARSE_REQUEST_REGEX = Pattern.compile("\\[([가-힣\\w]+)-(\\d+)]");
+    private final String itemRequest;
 
-    public Cart(String request) {
-        validate(request);
-        this.requestItems = parseRequestToMap(request);
+    public Cart(String itemRequest) {
+        if (!IS_FORMAT_CORRECT.matcher(itemRequest).matches()) {
+            throw new IllegalArgumentException("[ERROR] 형식에 맞춰 다시 입력해주세요");
+        }
+        this.itemRequest = itemRequest;
     }
 
-    private void validate(String request) {
-
-    }
-
-    private Map<String, Integer> parseRequestToMap(String data) {
-        return Arrays.stream(data.split(","))
-                .map(REQUEST_INPUT_REGEX::matcher)
+    public Map<String, Integer> getCartItems() {
+        return Arrays.stream(itemRequest.split(","))
+                .map(PARSE_REQUEST_REGEX::matcher)
                 .filter(Matcher::find)
                 .collect(Collectors.toMap(
                         m -> m.group(1),
                         m -> Integer.parseInt(m.group(2))
                 ));
     }
-
-    public Map<String, Integer> getCartItems() {
-        return requestItems;
-    }
-
 }

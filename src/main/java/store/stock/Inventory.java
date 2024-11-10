@@ -33,6 +33,11 @@ public class Inventory {
         return inventory.get(item);
     }
 
+    public boolean isItemPresent(String itemName) {
+        return inventory.keySet().stream()
+                .anyMatch(item -> item.getName().equals(itemName));
+    }
+
     public boolean isItemInPromotion(String itemName) {
         Item itemWithPromotion = getItemWithPromotion(itemName);
         return !(itemWithPromotion == null);

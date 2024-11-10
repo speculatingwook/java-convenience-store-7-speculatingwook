@@ -1,5 +1,7 @@
 package store.config;
 
+import store.io.StoreInput;
+import store.io.StoreView;
 import store.io.reader.FileReader;
 import store.io.reader.Reader;
 import store.parser.ConvenienceStoreParser;
@@ -25,6 +27,8 @@ public class StoreConfig {
         Container.register(Discount.class, ()->
                 new ConvenienceStoreDiscount(MEMBERSHIP_DISCOUT_RATE, Container.getInstance(Inventory.class))
         );
+        Container.register(StoreView.class, StoreView::new);
+        Container.register(StoreInput.class, ()-> new StoreInput(Container.getInstance(StoreView.class)));
     }
 
 }

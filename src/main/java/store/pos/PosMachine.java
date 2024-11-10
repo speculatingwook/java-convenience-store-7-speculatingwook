@@ -12,10 +12,31 @@ public class PosMachine {
     private final Inventory inventory;
     private OrderItemInfo orderItemInfo;
 
-    public PosMachine(PosScanner scanner, Cart cart, Inventory inventory) {
-        this.scanner = scanner;
-        this.cart = cart;
+    public PosMachine(Inventory inventory, PosScanner scanner, Cart cart) {
         this.inventory = inventory;
+        this.scanner = scanner;
+        validate(cart);
+        this.cart = cart;
+    }
+
+    private void validate(Cart cart) {
+        Map<String, Integer> cartItems = cart.getCartItems();
+        for (String itemName : cartItems.keySet()) {
+            isItemNameCorrect(itemName);
+            isItemCountValid(cartItems, itemName);
+        }
+    }
+
+    private void isItemNameCorrect(String itemName) {
+        if(!inventory.isItemPresent(itemName)) {
+            throw new IllegalArgumentException("[ERROR] 요청하신 항목이 재고에 없습니다. 이름을 확인해주세요.");
+        }
+    }
+
+    private void isItemCountValid(Map<String, Integer> cartItems, String itemName) {
+        if (cartItems.get(itemName) > inventory.getTotalAmount(itemName)) {
+            throw new IllegalArgumentException("[ERROR] 요청 수량이 재고보다 많습니다.");
+        }
     }
 
     public void scanCartItems() {

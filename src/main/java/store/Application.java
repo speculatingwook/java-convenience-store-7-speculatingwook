@@ -1,43 +1,48 @@
 package store;
 
-import store.stock.Inventory;
-import store.payment.Receipt;
+import store.config.Container;
 import store.io.StoreInput;
-import store.io.StoreView;
-import store.io.reader.FileReader;
-import store.io.reader.Reader;
-import store.io.writer.FileWriter;
-import store.io.writer.Writer;
-import store.stock.InventoryFactory;
-import store.payment.discount.ConvenienceStoreDiscount;
-import store.payment.discount.Discount;
-import store.parser.ConvenienceStoreParser;
-import store.parser.Parser;
+import store.pos.Cart;
+import store.pos.PosMachine;
+import store.pos.PosScanner;
+import store.stock.Inventory;
 
-import java.util.Map;
+import java.util.NoSuchElementException;
+import java.util.function.Supplier;
 
 public class Application {
     public static void main(String[] args) {
-        Reader fileReader = new FileReader();
-        Writer fileWriter = new FileWriter();
-        Receipt receipt = new Receipt();
-        StoreView view = new StoreView();
-        StoreInput input = new StoreInput(view);
-        Parser convenienceStoreParser = new ConvenienceStoreParser(fileReader.read("products.md"), fileReader.read("promotions.md"));
-
-        InventoryFactory inventoryFactory = new InventoryFactory(fileReader, convenienceStoreParser);
-        Inventory inventory = inventoryFactory.createInventory();
-        Discount discount = new ConvenienceStoreDiscount(30, inventory);
-
-        ConvenienceStore convenienceStore = new ConvenienceStore(inventory, receipt, discount, fileWriter, convenienceStoreParser, input);
-        view.greet();
-        view.printCurrentStock(inventory.toString());
-        String itemRequest = input.readItemRequest();
-        Map<String, Integer> parsedInput = ConvenienceStoreParser.parseRequestToMap(itemRequest);
-        convenienceStore.scan(parsedInput);
-        convenienceStore.addItemsToCart();
+        StoreInput input = Container.getInstance(StoreInput.class);
+        Container.register(PosMachine.class, retryOnFail(() -> {
+            Cart cart = new Cart(input.readItemRequest());
+            return new PosMachine(Container.getInstance(Inventory.class), Container.getInstance(PosScanner.class), cart);
+        }));
 
 
-        view.printReceipt(convenienceStore.issueReceipt());
+    }
+
+
+    /**
+     * 특정 작업이 실패할 경우 재시도하는 기능을 제공하는 메서드.
+     * 주어진 Supplier가 예외를 발생시킬 경우, 계속해서 재시도한다.
+     * 실패 시 사용자가 에러 메시지를 볼 수 있도록 처리하고,
+     * 특정 예외(NoSuchElementException) 발생 시에는 그대로 예외를 던진다.
+     *
+     * @param supplier 실행할 작업을 제공하는 Supplier
+     * @param <T>      Supplier가 반환하는 객체의 타입
+     * @return Supplier가 제공하는 객체
+     */
+    private static <T> Supplier<T> retryOnFail(Supplier<T> supplier) {
+        return () -> {
+            while (true) {
+                try {
+                    return supplier.get();
+                } catch (NoSuchElementException e) {
+                    throw new NoSuchElementException(e.getMessage());
+                } catch (RuntimeException e) {
+                    View.showError(e.getMessage());
+                }
+            }
+        };
     }
 }
