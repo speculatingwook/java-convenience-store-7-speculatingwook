@@ -5,6 +5,8 @@ import store.io.StoreView;
 import store.io.YesNoOption;
 import store.io.reader.FileReader;
 import store.io.reader.Reader;
+import store.io.writer.ResourceWriter;
+import store.io.writer.Writer;
 import store.util.parser.ConvenienceStoreParser;
 import store.util.parser.Parser;
 import store.payment.Payment;
@@ -28,6 +30,7 @@ public class StoreConfig {
         Container.register(StoreInput.class, () -> new StoreInput(Container.getInstance(StoreView.class)));
         Container.register(YesNoOption.class, () -> new YesNoOption(Container.getInstance(StoreInput.class)));
         Container.register(Reader.class, FileReader::new);
+        Container.register(Writer.class, ResourceWriter::new);
     }
 
     public void registerStockServices() {

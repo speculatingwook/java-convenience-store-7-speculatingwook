@@ -4,9 +4,13 @@ import store.config.Container;
 import store.config.StoreConfig;
 import store.io.StoreView;
 import store.io.YesNoOption;
+import store.io.writer.Writer;
 import store.payment.Payment;
+import store.payment.Receipt;
 import store.pos.OrderItemInfo;
 import store.pos.PosMachine;
+import store.stock.Inventory;
+import store.util.parser.Parser;
 
 public class Application {
     public static void main(String[] args) {
@@ -18,7 +22,7 @@ public class Application {
         StoreComponents components = initializeComponents();
         OrderItemInfo orderInfo = processOrder(components.posMachine, components.option);
         String receipt = handlePayment(components.payment, orderInfo, components.option);
-        finalizeTransaction(components.view, receipt, components.option);
+        finalizeTransaction(components, receipt, orderInfo);
     }
 
     private static StoreComponents initializeComponents() {
@@ -26,7 +30,8 @@ public class Application {
                 Container.getInstance(StoreView.class),
                 Container.getInstance(YesNoOption.class),
                 Container.getInstance(PosMachine.class),
-                Container.getInstance(Payment.class)
+                Container.getInstance(Payment.class),
+                Container.getInstance(Inventory.class)
         );
     }
 
@@ -41,13 +46,23 @@ public class Application {
         return payment.issueReceipt(option);
     }
 
-    private static void finalizeTransaction(StoreView view, String receipt, YesNoOption option) {
-        view.printReceipt(receipt);
+    private static void finalizeTransaction(StoreComponents components, String receipt, OrderItemInfo orderItemInfo) {
+        components.view.printReceipt(receipt);
+        saveInventoryState(components.inventory, orderItemInfo);
         Container.reset();
 
-        if (option.buyMoreItems()) {
+        if (components.option.buyMoreItems()) {
             processTransaction();
         }
+    }
+
+    private static void saveInventoryState(Inventory inventory, OrderItemInfo orderItemInfo) {
+        inventory.deductItems(orderItemInfo.getOrderItems());
+        inventory.refresh();
+        Parser parser = Container.getInstance(Parser.class);
+        Writer writer = Container.getInstance(Writer.class);
+        System.out.println(parser.parseStockToText(inventory.getInventory()));
+        writer.write("products.md", parser.parseStockToText(inventory.getInventory()));
     }
 
     private static void setup() {
@@ -63,7 +78,8 @@ public class Application {
             StoreView view,
             YesNoOption option,
             PosMachine posMachine,
-            Payment payment
+            Payment payment,
+            Inventory inventory
     ) {
     }
 }

@@ -30,6 +30,10 @@ public class Inventory {
         }
     }
 
+    public Map<Item, Integer> getInventory() {
+        return inventory;
+    }
+
     public Integer getItemCount(Item item) {
         return inventory.get(item);
     }
@@ -44,13 +48,16 @@ public class Inventory {
         return !(itemWithPromotion == null);
     }
 
+    /**
+     *
+     */
     public void refresh() {
         for (Item item : inventory.keySet()) {
             Integer amount = inventory.get(item);
             if (item.isPromotionPresent() && isItemOutOfPromotion(item, amount)) {
                 inventory.put(item, inventory.get(item) - amount);
                 Item unpromotedItem = getItemWithoutPromotion(item.getName());
-                inventory.put(item, inventory.get(unpromotedItem) + amount);
+                inventory.put(unpromotedItem, inventory.get(unpromotedItem) + amount);
             }
         }
     }

@@ -1,5 +1,6 @@
 package store.util.parser;
 
+import store.stock.Item;
 import store.stock.dto.ItemDto;
 import store.stock.dto.PromotionDto;
 
@@ -44,15 +45,27 @@ public class ConvenienceStoreParser implements Parser {
     }
 
     @Override
-    public String parseItemDtosToText(List<ItemDto> itemDtos) {
+    public String parseStockToText(Map<Item, Integer> items) {
         String header = "name,price,quantity,promotion";
+        return header + "\n" + parseItemDtos(items);
+    }
 
-        String itemsText = itemDtos.stream()
-                .map(dto -> String.join(",", dto.name(), dto.price(), dto.quantity(),
-                        dto.promotion() != null ? dto.promotion() : "null"))
-                .collect(Collectors.joining("\n"));
+    private String parseItemDtos(Map<Item, Integer> items) {
+        StringBuilder itemsText = new StringBuilder();
+        for (Item item : items.keySet()) {
+            itemsText.append(addItemText(items, item));
+        }
+        return itemsText.toString();
+    }
 
-        return header + "\n" + itemsText;
+    private StringBuilder addItemText(Map<Item, Integer> items, Item item) {
+        StringBuilder itemText = new StringBuilder();
+        String promotion = item.getPromotionName();
+        if (promotion.isEmpty()){
+            promotion = "null";
+        }
+        itemText.append(String.join(",", item.getName(), String.valueOf(item.getPrice()), String.valueOf(items.get(item)), promotion)).append("\n");
+        return itemText;
     }
 
     public static String formatNumberWithComma(int number) {
