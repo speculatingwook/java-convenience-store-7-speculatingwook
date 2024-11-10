@@ -8,21 +8,6 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 public class ConvenienceStoreParser implements Parser {
-    private final List<ItemDto> itemDtos;
-    private final List<PromotionDto> promotionDtos;
-
-    public ConvenienceStoreParser(String itemData, String promotionData) {
-        this.itemDtos = parseToItemDtos(itemData);
-        this.promotionDtos = parseToPromotionDtos(promotionData);
-    }
-
-    public List<ItemDto> getItemDtos() {
-        return List.copyOf(itemDtos);
-    }
-
-    public List<PromotionDto> getPromotionDtos() {
-        return List.copyOf(promotionDtos);
-    }
 
     @Override
     public List<ItemDto> parseToItemDtos(String data) {
