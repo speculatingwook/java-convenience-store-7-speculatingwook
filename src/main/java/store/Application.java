@@ -18,7 +18,7 @@ public class Application {
         StoreComponents components = initializeComponents();
         OrderItemInfo orderInfo = processOrder(components.posMachine, components.option);
         String receipt = handlePayment(components.payment, orderInfo, components.option);
-        finalizeTransaction(components.view, receipt);
+        finalizeTransaction(components.view, receipt, components.option);
     }
 
     private static StoreComponents initializeComponents() {
@@ -41,9 +41,13 @@ public class Application {
         return payment.issueReceipt(option);
     }
 
-    private static void finalizeTransaction(StoreView view, String receipt) {
+    private static void finalizeTransaction(StoreView view, String receipt, YesNoOption option) {
         view.printReceipt(receipt);
         Container.reset();
+
+        if (option.buyMoreItems()) {
+            processTransaction();
+        }
     }
 
     private static void setup() {
