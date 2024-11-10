@@ -1,5 +1,6 @@
 package store.pos;
 
+import store.ErrorCode;
 import store.io.YesNoOption;
 import store.stock.Inventory;
 import store.stock.Item;
@@ -29,13 +30,13 @@ public class PosMachine {
 
     private void isItemNameCorrect(String itemName) {
         if (!inventory.isItemPresent(itemName)) {
-            throw new IllegalArgumentException("[ERROR] 요청하신 항목이 재고에 없습니다. 이름을 확인해주세요.");
+            throw new IllegalArgumentException(ErrorCode.NO_ITEM.getErrorMessage());
         }
     }
 
     private void isItemCountValid(Map<String, Integer> cartItems, String itemName) {
         if (cartItems.get(itemName) > inventory.getTotalAmount(itemName)) {
-            throw new IllegalArgumentException("[ERROR] 재고 수량을 초과하여 구매할 수 없습니다. 다시 입력해 주세요.");
+            throw new IllegalArgumentException(ErrorCode.EXCEED_ITEM_COUNT.getErrorMessage());
         }
     }
 

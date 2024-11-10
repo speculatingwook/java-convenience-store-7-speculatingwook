@@ -1,5 +1,7 @@
 package store.pos;
 
+import store.ErrorCode;
+
 import java.util.Arrays;
 import java.util.Map;
 import java.util.regex.Matcher;
@@ -13,7 +15,7 @@ public class Cart {
 
     public Cart(String itemRequest) {
         if (!IS_FORMAT_CORRECT.matcher(itemRequest).matches()) {
-            throw new IllegalArgumentException("[ERROR] 형식에 맞춰 다시 입력해주세요");
+            throw new IllegalArgumentException(ErrorCode.INVALID_FORMAT_INPUT.getErrorMessage());
         }
         this.itemRequest = itemRequest;
     }

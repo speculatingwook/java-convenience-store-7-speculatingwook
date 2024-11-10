@@ -1,6 +1,7 @@
 package store.stock;
 
 
+import store.ErrorCode;
 import store.util.parser.ConvenienceStoreParser;
 
 import java.util.HashMap;
@@ -18,7 +19,7 @@ public class Inventory {
     private void validate(HashMap<Item, Integer> inventory) {
         for (Item item : inventory.keySet()) {
             if (inventory.get(item) < 0) {
-                throw new ArithmeticException("[CRITICAL] the amount cannot be negative.");
+                throw new IllegalArgumentException(ErrorCode.COUNT_UNDER_ZERO.getCriticalMessage());
             }
         }
     }

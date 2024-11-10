@@ -1,5 +1,7 @@
 package store.io;
 
+import store.ErrorCode;
+
 import java.util.Objects;
 
 public class YesNoOption {
@@ -62,7 +64,7 @@ public class YesNoOption {
 
     private void validate(String input) {
         if (!(input.equals(YES) || input.equals(NO))) {
-            throw new IllegalArgumentException("[ERROR] 입력이 잘못되었습니다. Y 혹은 N을 입력해주세요");
+            throw new IllegalArgumentException(ErrorCode.Y_N_INPUT_INVALID.getErrorMessage());
         }
     }
 

@@ -2,6 +2,7 @@ package store.stock;
 
 
 import camp.nextstep.edu.missionutils.DateTimes;
+import store.ErrorCode;
 
 import java.time.LocalDateTime;
 import java.util.Arrays;
@@ -42,13 +43,13 @@ public class Promotion {
         try {
             Integer.parseInt(count);
         } catch (NumberFormatException e) {
-            throw new NumberFormatException("[CRITICAL] class Promotion input type invalid: not integer");
+            throw new IllegalArgumentException(ErrorCode.INVALID_FORMAT.getCriticalMessage());
         }
     }
 
     private void validateDateFormat(String date) {
         if (!isDateFormat.matcher(date).matches()) {
-            throw new NumberFormatException("[CRITICAL] class Promotion input type invalid: not a valid date");
+            throw new IllegalArgumentException(ErrorCode.INVALID_DATE_FORMAT.getCriticalMessage());
         }
     }
 

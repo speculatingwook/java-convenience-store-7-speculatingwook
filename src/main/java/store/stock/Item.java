@@ -1,5 +1,7 @@
 package store.stock;
 
+import store.ErrorCode;
+
 import java.util.Objects;
 
 public class Item {
@@ -30,13 +32,13 @@ public class Item {
         try {
             Integer.parseInt(input);
         } catch (NumberFormatException e) {
-            throw new NumberFormatException(input);
+            throw new NumberFormatException(ErrorCode.INVALID_FORMAT.getCriticalMessage());
         }
     }
 
     private void validatePrice(String price) {
         if (Integer.parseInt(price) < 0) {
-            throw new ArithmeticException("[ERROR] 금액은 음수가 불가능합니다.");
+            throw new IllegalArgumentException(ErrorCode.COUNT_UNDER_ZERO.getCriticalMessage());
         }
     }
 
