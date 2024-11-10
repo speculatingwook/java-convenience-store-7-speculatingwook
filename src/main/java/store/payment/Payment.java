@@ -8,7 +8,7 @@ import java.util.Map;
 
 public class Payment {
     private final Receipt receipt;
-    private final Discount discount
+    private final Discount discount;
     private ScanItemInfo scanItemInfo;
 
     public Payment(Receipt receipt, Discount discount) {
