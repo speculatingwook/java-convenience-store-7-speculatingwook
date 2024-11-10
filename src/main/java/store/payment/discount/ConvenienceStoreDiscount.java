@@ -1,7 +1,10 @@
 package store.payment.discount;
 
+import store.pos.OrderItemInfo;
 import store.stock.Inventory;
 import store.stock.Item;
+
+import java.util.Map;
 
 public class ConvenienceStoreDiscount implements Discount {
     private final Integer discountPercentage;
@@ -13,17 +16,24 @@ public class ConvenienceStoreDiscount implements Discount {
     }
 
     @Override
-    public Integer calculatePromotionItemCount(String itemName, int requestCount) {
-        Item itemWithPromotion = inventory.getItemWithPromotion(itemName);
-        int offerCount = itemWithPromotion.getPromotionOfferCount();
-        int buyMinimumCount = itemWithPromotion.getPromotionMinimumBuyCount();
-        int maximumSet = inventory.getItemCount(itemWithPromotion) / (offerCount + buyMinimumCount);
-
-        return maximumSet * buyMinimumCount;
+    public Integer receivePromotionDiscount(Map<Item, Integer> promotedItems) {
+        int totalDiscount = 0;
+        for (Map.Entry<Item, Integer> entry : promotedItems.entrySet()) {
+            Item item = entry.getKey();
+            Integer quantity = entry.getValue();
+            totalDiscount += item.getPrice() * quantity;
+        }
+        return totalDiscount;
     }
 
     @Override
-    public Double calculateMembershipDiscount(int amount) {
-        return (double) (amount / discountPercentage);
+    public Double receiveMembershipDiscount(Map<Item, Integer> unpromotedItems) {
+        int totalPrice = 0;
+        for (Map.Entry<Item, Integer> entry : unpromotedItems.entrySet()) {
+            Item item = entry.getKey();
+            Integer quantity = entry.getValue();
+            totalPrice += item.getPrice() * quantity;
+        }
+        return (double) (totalPrice / discountPercentage);
     }
 }

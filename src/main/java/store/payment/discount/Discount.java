@@ -1,7 +1,12 @@
 package store.payment.discount;
 
-public interface Discount extends MembershipDiscount, PromotionDiscount {
-    Integer calculatePromotionItemCount(String itemName, int requestCount);
+import store.pos.OrderItemInfo;
+import store.stock.Item;
 
-    Double calculateMembershipDiscount(int amount);
+import java.util.Map;
+
+public interface Discount extends MembershipDiscount, PromotionDiscount {
+    Integer receivePromotionDiscount(Map<Item, Integer> promotedItems);
+
+    Double receiveMembershipDiscount(Map<Item, Integer> unpromotedItems);
 }
