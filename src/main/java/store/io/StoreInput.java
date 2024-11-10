@@ -10,7 +10,6 @@ public class StoreInput {
     }
 
     public String readItemRequest() {
-        view.greet();
         view.guideForRequestFormat();
         return Console.readLine();
     }

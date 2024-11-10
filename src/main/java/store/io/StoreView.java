@@ -7,6 +7,7 @@ public class StoreView {
     }
 
     public void printCurrentStock(String currentStock) {
+        System.out.println("현재 보유하고 있는 상품입니다.\n");
         System.out.println(currentStock);
     }
 

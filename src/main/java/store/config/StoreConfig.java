@@ -64,6 +64,7 @@ public class StoreConfig {
     }
 
     private PosMachine tryCreatePosMachine(Inventory inventory, StoreView view, StoreInput input) {
+        view.greet();
         view.printCurrentStock(inventory.toString());
         String itemRequest = input.readItemRequest();
         Cart cart = new Cart(itemRequest);
