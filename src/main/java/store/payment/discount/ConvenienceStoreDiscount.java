@@ -1,6 +1,5 @@
 package store.payment.discount;
 
-import store.pos.OrderItemInfo;
 import store.stock.Inventory;
 import store.stock.Item;
 

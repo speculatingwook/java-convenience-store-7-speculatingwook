@@ -23,19 +23,19 @@ public class ScanItemInfo {
     }
 
     public void updatePromotedItem(Item item, int count) {
-        if(promotedItems.containsKey(item)) {
+        if (promotedItems.containsKey(item)) {
             promotedItems.put(item, promotedItems.get(item) + count);
         }
-        if(!promotedItems.containsKey(item)) {
+        if (!promotedItems.containsKey(item)) {
             promotedItems.put(item, count);
         }
     }
 
     public void updateUnPromotedItem(Item item, int count) {
-        if(unpromotedItems.containsKey(item)) {
+        if (unpromotedItems.containsKey(item)) {
             unpromotedItems.put(item, unpromotedItems.get(item) + count);
         }
-        if(!unpromotedItems.containsKey(item)) {
+        if (!unpromotedItems.containsKey(item)) {
             unpromotedItems.put(item, count);
         }
     }

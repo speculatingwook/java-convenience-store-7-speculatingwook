@@ -13,24 +13,24 @@ import store.stock.Inventory;
 import store.stock.InventoryFactory;
 
 public class StoreConfig {
-    private static final Integer MEMBERSHIP_DISCOUT_RATE = 30;
+    private static final Integer MEMBERSHIP_DISCOUNT_RATE = 30;
 
     public void registerCoreServices() {
         Container.register(Parser.class, ConvenienceStoreParser::new);
         Container.register(Reader.class, FileReader::new);
-        Container.register(InventoryFactory.class, ()->
+        Container.register(InventoryFactory.class, () ->
                 new InventoryFactory(Container.getInstance(Reader.class), Container.getInstance(Parser.class))
         );
-        Container.register(Inventory.class, ()-> {
+        Container.register(Inventory.class, () -> {
             InventoryFactory inventoryFactory = Container.getInstance(InventoryFactory.class);
             return inventoryFactory.createInventory();
         });
-        Container.register(Discount.class, ()->
-                new ConvenienceStoreDiscount(MEMBERSHIP_DISCOUT_RATE, Container.getInstance(Inventory.class))
+        Container.register(Discount.class, () ->
+                new ConvenienceStoreDiscount(MEMBERSHIP_DISCOUNT_RATE, Container.getInstance(Inventory.class))
         );
         Container.register(StoreView.class, StoreView::new);
-        Container.register(StoreInput.class, ()-> new StoreInput(Container.getInstance(StoreView.class)));
-        Container.register(YesNoOption.class, ()-> new YesNoOption(Container.getInstance(StoreInput.class)));
+        Container.register(StoreInput.class, () -> new StoreInput(Container.getInstance(StoreView.class)));
+        Container.register(YesNoOption.class, () -> new YesNoOption(Container.getInstance(StoreInput.class)));
     }
 
 }

@@ -15,7 +15,7 @@ public class Inventory {
     }
 
     private void validate(HashMap<Item, Integer> inventory) {
-        for(Item item : inventory.keySet()) {
+        for (Item item : inventory.keySet()) {
             if (inventory.get(item) < 0) {
                 throw new ArithmeticException("[CRITICAL] the amount cannot be negative.");
             }
@@ -23,7 +23,7 @@ public class Inventory {
     }
 
     public void deductItems(Map<Item, Integer> items) {
-        for(Item item : items.keySet()) {
+        for (Item item : items.keySet()) {
             Integer amount = items.get(item);
             deductItem(item, amount);
         }
@@ -44,7 +44,7 @@ public class Inventory {
     }
 
     public void refresh() {
-        for(Item item : inventory.keySet()) {
+        for (Item item : inventory.keySet()) {
             Integer amount = inventory.get(item);
             if (item.isPromotionPresent() && isItemOutOfPromotion(item, amount)) {
                 inventory.put(item, inventory.get(item) - amount);
@@ -54,31 +54,31 @@ public class Inventory {
         }
     }
 
-    public Integer getTotalAmount(String item){
+    public Integer getTotalAmount(String item) {
         Item itemWithPromotion = getItemWithPromotion(item);
         Item itemWithoutPromotion = getItemWithoutPromotion(item);
         return inventory.get(itemWithPromotion) + inventory.get(itemWithoutPromotion);
     }
 
-    public Item getItemWithPromotion(String itemName){
+    public Item getItemWithPromotion(String itemName) {
         for (Item item : inventory.keySet()) {
-            if(item.getName().equals(itemName) && item.isPromotionPresent()){
+            if (item.getName().equals(itemName) && item.isPromotionPresent()) {
                 return item;
             }
         }
         return null;
     }
 
-    public Item getItemWithoutPromotion(String itemName){
+    public Item getItemWithoutPromotion(String itemName) {
         for (Item item : inventory.keySet()) {
-            if(item.getName().equals(itemName) && !item.isPromotionPresent()){
+            if (item.getName().equals(itemName) && !item.isPromotionPresent()) {
                 return item;
             }
         }
         return null;
     }
 
-    private void deductItem(Item item, int amount){
+    private void deductItem(Item item, int amount) {
         inventory.put(item, inventory.get(item) - amount);
     }
 
@@ -89,7 +89,7 @@ public class Inventory {
     @Override
     public String toString() {
         StringBuilder currentStock = new StringBuilder();
-        for(Item item : inventory.keySet()) {
+        for (Item item : inventory.keySet()) {
             currentStock.append(addDefaultInfo(item))
                     .append(addStockCountInfo(item))
                     .append(addPromotionInfo(item));
@@ -111,7 +111,7 @@ public class Inventory {
         if (!count.equals(0)) {
             stockCount.append(inventory.get(item)).append("개");
         }
-        if (count.equals(0)){
+        if (count.equals(0)) {
             stockCount.append("재고 없음");
         }
         return stockCount;

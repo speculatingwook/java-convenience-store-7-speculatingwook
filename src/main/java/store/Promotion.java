@@ -39,15 +39,15 @@ public class Promotion {
     }
 
     private void validateNumeric(String count) {
-        try{
+        try {
             Integer.parseInt(count);
-        }catch (NumberFormatException e){
+        } catch (NumberFormatException e) {
             throw new NumberFormatException("[CRITICAL] class Promotion input type invalid: not integer");
         }
     }
 
     private void validateDateFormat(String date) {
-        if(!isDateFormat.matcher(date).matches()){
+        if (!isDateFormat.matcher(date).matches()) {
             throw new NumberFormatException("[CRITICAL] class Promotion input type invalid: not a valid date");
         }
     }

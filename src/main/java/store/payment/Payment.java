@@ -4,6 +4,7 @@ import store.io.YesNoOption;
 import store.payment.discount.Discount;
 import store.pos.OrderItemInfo;
 import store.stock.Item;
+
 import java.util.Map;
 
 public class Payment {
@@ -34,10 +35,10 @@ public class Payment {
 
     private void addDiscountsToReceipt(YesNoOption option, Integer discountAmount, Double membershipDiscountAmount) {
         boolean isMembership = option.getMembershipDiscount();
-        if(isMembership){
+        if (isMembership) {
             addMembershipDiscountToReceipt(discountAmount, membershipDiscountAmount);
         }
-        if(!isMembership){
+        if (!isMembership) {
             addDefaultDiscountToReceipt(discountAmount);
         }
     }

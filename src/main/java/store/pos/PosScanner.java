@@ -28,14 +28,14 @@ public class PosScanner {
     }
 
     private void classifyUnpromotedItems(String itemName, Integer itemCount) {
-        if(inventory.isItemInPromotion(itemName)) {
+        if (inventory.isItemInPromotion(itemName)) {
             Item unpromotedItem = inventory.getItemWithPromotion(itemName);
             scanItemInfo.updateUnPromotedItem(unpromotedItem, itemCount);
         }
     }
 
     private void classifyPromotedItems(String itemName, Integer itemCount) {
-        if(!inventory.isItemInPromotion(itemName)) {
+        if (!inventory.isItemInPromotion(itemName)) {
             Item promotedItem = inventory.getItemWithPromotion(itemName);
             scanItemInfo.updatePromotedItem(promotedItem, itemCount);
         }

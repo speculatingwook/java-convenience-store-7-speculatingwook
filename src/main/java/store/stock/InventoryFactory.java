@@ -4,8 +4,8 @@ import store.Promotion;
 import store.Promotions;
 import store.dto.ItemDto;
 import store.dto.PromotionDto;
-import store.parser.Parser;
 import store.io.reader.Reader;
+import store.parser.Parser;
 
 import java.util.HashMap;
 import java.util.List;
@@ -15,7 +15,7 @@ import java.util.stream.Collectors;
 public class InventoryFactory {
     private final Reader reader;
     private final Parser parser;
-    
+
     public InventoryFactory(Reader reader, Parser parser) {
         this.reader = reader;
         this.parser = parser;
@@ -33,7 +33,7 @@ public class InventoryFactory {
 
     private HashMap<Item, Integer> createItems(List<ItemDto> itemDtos, Promotions promotions) {
         HashMap<Item, Integer> inventory = new HashMap<>();
-        for(ItemDto itemDto : itemDtos) {
+        for (ItemDto itemDto : itemDtos) {
             Item item = new Item(itemDto.name(), itemDto.price(), promotions.getPromotion(itemDto.promotion()));
             inventory.put(item, Integer.parseInt(itemDto.quantity()));
         }
@@ -43,8 +43,8 @@ public class InventoryFactory {
 
     private HashMap<Item, Integer> getEmptyItems(HashMap<Item, Integer> items) {
         HashMap<Item, Integer> emptyItems = new HashMap<>();
-        for(Item item : items.keySet()) {
-            if(item.isPromotionPresent() && isItemWithoutPromotionNotExist(items, item.getName())){
+        for (Item item : items.keySet()) {
+            if (item.isPromotionPresent() && isItemWithoutPromotionNotExist(items, item.getName())) {
                 Item emptyItem = new Item(item.getName(), String.valueOf(item.getPrice()));
                 emptyItems.put(emptyItem, 0);
             }
@@ -70,11 +70,11 @@ public class InventoryFactory {
                 promotionDto.endDate());
     }
 
-    private boolean isItemWithoutPromotionNotExist(Map<Item, Integer> items, String itemName){
+    private boolean isItemWithoutPromotionNotExist(Map<Item, Integer> items, String itemName) {
         List<Item> emptyItems = items
                 .keySet()
                 .stream()
-                .filter(item -> item.getName().equals(itemName)).filter(item-> !item.isPromotionPresent()).toList();
+                .filter(item -> item.getName().equals(itemName)).filter(item -> !item.isPromotionPresent()).toList();
         return emptyItems.isEmpty();
     }
 }

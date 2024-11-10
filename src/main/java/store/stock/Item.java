@@ -16,7 +16,7 @@ public class Item {
         this.promotion = promotion;
     }
 
-    public Item(String name, String price){
+    public Item(String name, String price) {
         validatePrice(price);
         this.name = name;
         this.price = Integer.parseInt(price);
@@ -26,13 +26,12 @@ public class Item {
     private void validate(String price, Promotion promotion) {
         validateNumeric(price);
         validatePrice(price);
-//        validatePromotionOffer(promotion.getOfferCount());
     }
 
     private void validateNumeric(String input) {
-        try{
+        try {
             Integer.parseInt(input);
-        }catch (NumberFormatException e){
+        } catch (NumberFormatException e) {
             throw new NumberFormatException(input);
         }
     }
@@ -40,12 +39,6 @@ public class Item {
     private void validatePrice(String price) {
         if (Integer.parseInt(price) < 0) {
             throw new ArithmeticException("[ERROR] 금액은 음수가 불가능합니다.");
-        }
-    }
-
-    private void validatePromotionOffer(Integer promotionAmount) {
-        if (promotionAmount < 0) {
-            throw new ArithmeticException("[CRITICAL] promotionAmount cannot be less than zero.");
         }
     }
 
@@ -74,7 +67,7 @@ public class Item {
     }
 
     public String getPromotionName() {
-        if(promotion == null) {
+        if (promotion == null) {
             return "";
         }
         return promotion.getPromotionName();
