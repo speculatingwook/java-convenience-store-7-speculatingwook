@@ -9,6 +9,7 @@ import store.parser.ConvenienceStoreParser;
 import store.parser.Parser;
 import store.payment.discount.ConvenienceStoreDiscount;
 import store.payment.discount.Discount;
+import store.pos.PosScanner;
 import store.stock.Inventory;
 import store.stock.InventoryFactory;
 
@@ -28,6 +29,7 @@ public class StoreConfig {
         Container.register(Discount.class, () ->
                 new ConvenienceStoreDiscount(MEMBERSHIP_DISCOUNT_RATE, Container.getInstance(Inventory.class))
         );
+        Container.register(PosScanner.class, ()-> new PosScanner(Container.getInstance(Inventory.class)));
         Container.register(StoreView.class, StoreView::new);
         Container.register(StoreInput.class, () -> new StoreInput(Container.getInstance(StoreView.class)));
         Container.register(YesNoOption.class, () -> new YesNoOption(Container.getInstance(StoreInput.class)));
