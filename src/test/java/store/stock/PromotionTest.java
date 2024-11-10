@@ -2,6 +2,7 @@ package store.stock;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import store.ErrorCode;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -37,33 +38,33 @@ class PromotionTest {
         String endDate = "2024-12-31";
 
         // when, then
-        Exception exception = assertThrows(NumberFormatException.class, () -> {
+        Exception exception = assertThrows(IllegalArgumentException.class, () -> {
             new Promotion(name, minimumBuyCount, offerCount, startDate, endDate);
         });
 
-        assertEquals("[CRITICAL] class Promotion input type invalid: not a valid date", exception.getMessage());
+        assertEquals(ErrorCode.INVALID_DATE_FORMAT.getCriticalMessage(), exception.getMessage());
     }
 
     @Test
-    @DisplayName("수치 값이 잘못된 경우 예외가 발생한다")
+    @DisplayName("잘못된 수치 값이 입력되면 예외가 발생한다")
     void testPromotionCreation_invalidNumericValue() {
         // given
         String name = "반짝할인";
-        String minimumBuyCount = "abc";
+        String minimumBuyCount = "abc";  // 잘못된 숫자
         String offerCount = "1";
         String startDate = "2024-11-01";
         String endDate = "2024-11-30";
 
         // when, then
-        Exception exception = assertThrows(NumberFormatException.class, () -> {
+        Exception exception = assertThrows(IllegalArgumentException.class, () -> {
             new Promotion(name, minimumBuyCount, offerCount, startDate, endDate);
         });
 
-        assertEquals("[CRITICAL] class Promotion input type invalid: not integer", exception.getMessage());
+        assertEquals(ErrorCode.INVALID_FORMAT.getCriticalMessage(), exception.getMessage());
     }
 
     @Test
-    @DisplayName("유효한 날짜 범위일 때 Promotion이 유효하다고 판별된다")
+    @DisplayName("현재 날짜가 유효한 범위 내에 있으면 Promotion이 유효하다고 판별된다")
     void testPromotionIsValid_validRange() {
         // given
         String name = "MD추천상품";
@@ -82,14 +83,14 @@ class PromotionTest {
     }
 
     @Test
-    @DisplayName("날짜 범위가 현재 날짜와 맞지 않으면 Promotion이 유효하지 않다고 판별된다")
+    @DisplayName("현재 날짜가 유효한 범위 밖에 있으면 Promotion이 유효하지 않다고 판별된다")
     void testPromotionIsValid_invalidRange() {
         // given
         String name = "반짝할인";
         String minimumBuyCount = "1";
         String offerCount = "1";
-        String startDate = "2024-11-01";
-        String endDate = "2024-11-30";
+        String startDate = "2023-01-01";
+        String endDate = "2023-12-31";
 
         Promotion promotion = new Promotion(name, minimumBuyCount, offerCount, startDate, endDate);
 
@@ -97,12 +98,12 @@ class PromotionTest {
         boolean result = promotion.isPromotionValid();
 
         // then
-        assertTrue(result);
+        assertFalse(result);
     }
 
     @Test
-    @DisplayName("Promotion 이름이 맞으면 true를 반환한다")
-    void testIsRightPromotion() {
+    @DisplayName("Promotion 이름이 일치하면 true를 반환한다")
+    void testIsRightPromotion_nameMatch() {
         // given
         String name = "탄산2+1";
         String minimumBuyCount = "2";
