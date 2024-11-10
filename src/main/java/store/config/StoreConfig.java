@@ -24,6 +24,8 @@ import java.util.function.Supplier;
 
 public class StoreConfig {
     private static final Integer MEMBERSHIP_DISCOUNT_RATE = 30;
+    private static final String PRODUCT_FILE_NAME = "products.md";
+    private static final String PROMOTION_FILE_NAME = "promotions.md";
 
     public void registerIO() {
         Container.register(StoreView.class, StoreView::new);
@@ -39,7 +41,7 @@ public class StoreConfig {
         );
         Container.register(Inventory.class, () -> {
             InventoryFactory inventoryFactory = Container.getInstance(InventoryFactory.class);
-            return inventoryFactory.createInventory();
+            return inventoryFactory.createInventory(PRODUCT_FILE_NAME, PROMOTION_FILE_NAME);
         });
     }
 

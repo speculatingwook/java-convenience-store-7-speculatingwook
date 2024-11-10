@@ -19,11 +19,11 @@ public class InventoryFactory {
         this.parser = parser;
     }
 
-    public Inventory createInventory() {
-        String itemData = reader.read("products.md");
+    public Inventory createInventory(String productFileName, String promotionFileName) {
+        String itemData = reader.read(productFileName);
         List<ItemDto> itemDtos = parser.parseToItemDtos(itemData);
 
-        Promotions promotions = createPromotions();
+        Promotions promotions = createPromotions(promotionFileName);
         HashMap<Item, Integer> inventory = createItems(itemDtos, promotions);
 
         return new Inventory(inventory);
@@ -50,8 +50,8 @@ public class InventoryFactory {
         return emptyItems;
     }
 
-    private Promotions createPromotions() {
-        String promotionData = reader.read("promotions.md");
+    private Promotions createPromotions(String fileName) {
+        String promotionData = reader.read(fileName);
         List<PromotionDto> promotionDtos = parser.parseToPromotionDtos(promotionData);
         return new Promotions(
                 promotionDtos.stream()
