@@ -1,6 +1,6 @@
-package store.parser;
+package store.util.parser;
 
-import store.dto.ItemDto;
+import store.stock.dto.ItemDto;
 
 import java.util.List;
 

@@ -1,12 +1,11 @@
 package store.stock;
 
 
-import store.parser.ConvenienceStoreParser;
+import store.util.parser.ConvenienceStoreParser;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 public class Inventory {
     private final HashMap<Item, Integer> inventory;

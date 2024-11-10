@@ -5,8 +5,6 @@ import store.config.StoreConfig;
 import store.io.StoreView;
 import store.io.YesNoOption;
 import store.payment.Payment;
-import store.payment.Receipt;
-import store.payment.discount.Discount;
 import store.pos.OrderItemInfo;
 import store.pos.PosMachine;
 

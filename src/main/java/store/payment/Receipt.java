@@ -1,7 +1,7 @@
 package store.payment;
 
 
-import static store.parser.ConvenienceStoreParser.formatNumberWithComma;
+import static store.util.parser.ConvenienceStoreParser.formatNumberWithComma;
 
 public class Receipt {
     private final StringBuilder receiptContent;

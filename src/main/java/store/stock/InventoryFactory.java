@@ -1,9 +1,9 @@
 package store.stock;
 
-import store.dto.ItemDto;
-import store.dto.PromotionDto;
+import store.stock.dto.ItemDto;
+import store.stock.dto.PromotionDto;
 import store.io.reader.Reader;
-import store.parser.Parser;
+import store.util.parser.Parser;
 
 import java.util.HashMap;
 import java.util.List;

@@ -1,4 +1,4 @@
-package store.dto;
+package store.stock.dto;
 
 public record PromotionDto(String name, String buy, String get, String startDate, String endDate) {
 }

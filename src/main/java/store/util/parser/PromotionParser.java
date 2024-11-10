@@ -1,7 +1,7 @@
-package store.parser;
+package store.util.parser;
 
 
-import store.dto.PromotionDto;
+import store.stock.dto.PromotionDto;
 
 import java.util.List;
 
