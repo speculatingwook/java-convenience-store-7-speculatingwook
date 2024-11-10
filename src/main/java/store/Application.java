@@ -46,7 +46,7 @@ public class Application {
                 } catch (NoSuchElementException e) {
                     throw new NoSuchElementException(e.getMessage());
                 } catch (RuntimeException e) {
-                    View.showError(e.getMessage());
+                    StoreView.showError(e.getMessage());
                 }
             }
         };

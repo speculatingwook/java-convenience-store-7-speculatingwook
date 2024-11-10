@@ -33,4 +33,8 @@ public class StoreView {
     public void printReceipt(String receipt) {
         System.out.println(receipt);
     }
+
+    public static void showError(String message) {
+        System.out.println(message);
+    }
 }

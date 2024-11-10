@@ -22,7 +22,7 @@ public class YesNoOption {
                 String option = input.readMoreStockForDiscountRequest(itemName);
                 return isYes(option);
             } catch (IllegalArgumentException e) {
-                System.out.println(e.getMessage());
+                StoreView.showError(e.getMessage());
             }
         }
     }
@@ -33,7 +33,7 @@ public class YesNoOption {
                 String option = input.readFullPricePaymentRequest(itemName, amount);
                 return isYes(option);
             } catch (IllegalArgumentException e) {
-                System.out.println(e.getMessage());
+                StoreView.showError(e.getMessage());
             }
         }
     }
@@ -44,7 +44,7 @@ public class YesNoOption {
                 String option = input.readMembershipDiscountRequest();
                 return isYes(option);
             } catch (IllegalArgumentException e) {
-                System.out.println(e.getMessage());
+                StoreView.showError(e.getMessage());
             }
         }
     }
@@ -55,7 +55,7 @@ public class YesNoOption {
                 String option = input.readAdditionalItemRequest();
                 return isYes(option);
             } catch (IllegalArgumentException e) {
-                System.out.println(e.getMessage());
+                StoreView.showError(e.getMessage());
             }
         }
     }

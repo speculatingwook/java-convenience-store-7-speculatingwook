@@ -23,18 +23,13 @@ public class Container {
 
     @SuppressWarnings("unchecked")
     public static <T> T getInstance(Class<T> type) {
-        if (singletons.containsKey(type)) {
-            return (T) singletons.get(type);
-        }
-
-        Supplier<?> provider = registry.get(type);
-        if (provider == null) {
-            throw new IllegalArgumentException("No provider registered for " + type.getName());
-        }
-
-        T instance = (T) provider.get();
-        singletons.put(type, instance);
-        return instance;
+        return (T) singletons.computeIfAbsent(type, key -> {
+            Supplier<?> provider = registry.get(key);
+            if (provider == null) {
+                throw new IllegalArgumentException("No provider registered for " + key.getName());
+            }
+            return provider.get();
+        });
     }
 
     public static void reset() {
