@@ -4,6 +4,7 @@ package store.stock;
 import store.parser.ConvenienceStoreParser;
 
 import java.util.HashMap;
+import java.util.Map;
 
 public class Inventory {
     private final HashMap<Item, Integer> inventory;
@@ -21,8 +22,11 @@ public class Inventory {
         }
     }
 
-    public void deductItem(Item item, int amount){
-        inventory.put(item, inventory.get(item) - amount);
+    public void deductItems(Map<Item, Integer> items) {
+        for(Item item : items.keySet()) {
+            Integer amount = items.get(item);
+            deductItem(item, amount);
+        }
     }
 
     public Integer getItemCount(Item item) {
@@ -34,6 +38,16 @@ public class Inventory {
         return !(itemWithPromotion == null);
     }
 
+    public void refresh() {
+        for(Item item : inventory.keySet()) {
+            Integer amount = inventory.get(item);
+            if (item.isPromotionPresent() && isItemOutOfPromotion(item, amount)) {
+                inventory.put(item, inventory.get(item) - amount);
+                Item unpromotedItem = getItemWithoutPromotion(item.getName());
+                inventory.put(item, inventory.get(unpromotedItem) + amount);
+            }
+        }
+    }
 
     public Integer getTotalAmount(String item){
         Item itemWithPromotion = getItemWithPromotion(item);
@@ -57,6 +71,14 @@ public class Inventory {
             }
         }
         return null;
+    }
+
+    private void deductItem(Item item, int amount){
+        inventory.put(item, inventory.get(item) - amount);
+    }
+
+    private boolean isItemOutOfPromotion(Item item, int count) {
+        return count <= item.getPromotionMinimumBuyCount();
     }
 
     @Override
