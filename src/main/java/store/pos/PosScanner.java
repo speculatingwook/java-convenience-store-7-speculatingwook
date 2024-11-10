@@ -29,15 +29,28 @@ public class PosScanner {
 
     private void classifyUnpromotedItems(String itemName, Integer itemCount) {
         if (inventory.isItemInPromotion(itemName)) {
-            Item unpromotedItem = inventory.getItemWithPromotion(itemName);
-            scanItemInfo.updateUnPromotedItem(unpromotedItem, itemCount);
+            Item promotedItem = inventory.getItemWithPromotion(itemName);
+            updatePromotedItemWhenValid(promotedItem, itemCount);
+            updateUnPromotedItemWhenNotValid(promotedItem, itemCount);
         }
     }
 
     private void classifyPromotedItems(String itemName, Integer itemCount) {
         if (!inventory.isItemInPromotion(itemName)) {
-            Item promotedItem = inventory.getItemWithPromotion(itemName);
+            Item promotedItem = inventory.getItemWithoutPromotion(itemName);
+            scanItemInfo.updateUnPromotedItem(promotedItem, itemCount);
+        }
+    }
+
+    private void updatePromotedItemWhenValid(Item promotedItem, Integer itemCount) {
+        if (promotedItem.isPromotionEventValid()){
             scanItemInfo.updatePromotedItem(promotedItem, itemCount);
+        }
+    }
+
+    private void updateUnPromotedItemWhenNotValid(Item promotedItem, Integer itemCount) {
+        if (!promotedItem.isPromotionEventValid()){
+            scanItemInfo.updateUnPromotedItem(promotedItem, itemCount);
         }
     }
 }

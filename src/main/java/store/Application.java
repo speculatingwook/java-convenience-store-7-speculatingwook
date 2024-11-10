@@ -52,6 +52,7 @@ public class Application {
 
         Payment payment = Container.getInstance(Payment.class);
         view.printReceipt(payment.issueReceipt(option));
+        Container.reset();
     }
 
 

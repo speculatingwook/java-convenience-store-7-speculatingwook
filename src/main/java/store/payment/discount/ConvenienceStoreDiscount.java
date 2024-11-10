@@ -17,10 +17,9 @@ public class ConvenienceStoreDiscount implements Discount {
     @Override
     public Integer receivePromotionDiscount(Map<Item, Integer> promotedItems) {
         int totalDiscount = 0;
-        for (Map.Entry<Item, Integer> entry : promotedItems.entrySet()) {
-            Item item = entry.getKey();
-            Integer quantity = entry.getValue();
-            totalDiscount += item.getPrice() * quantity;
+        for (Item item : promotedItems.keySet()) {
+            int setWithPromotion = promotedItems.get(item) / (item.getPromotionOfferCount() + item.getPromotionOfferCount());
+            totalDiscount += item.getPrice() * setWithPromotion;
         }
         return totalDiscount;
     }
@@ -28,10 +27,8 @@ public class ConvenienceStoreDiscount implements Discount {
     @Override
     public Double receiveMembershipDiscount(Map<Item, Integer> unpromotedItems) {
         int totalPrice = 0;
-        for (Map.Entry<Item, Integer> entry : unpromotedItems.entrySet()) {
-            Item item = entry.getKey();
-            Integer quantity = entry.getValue();
-            totalPrice += item.getPrice() * quantity;
+        for (Item item : unpromotedItems.keySet()) {
+            totalPrice += item.getPrice() * unpromotedItems.get(item);
         }
         return (double) (totalPrice / discountPercentage);
     }

@@ -63,6 +63,9 @@ public class Item {
     }
 
     public boolean isPromotionEventValid() {
+        if (promotion == null) {
+            return false;
+        }
         return promotion.isPromotionValid();
     }
 

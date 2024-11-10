@@ -4,7 +4,9 @@ package store.stock;
 import store.parser.ConvenienceStoreParser;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 public class Inventory {
     private final HashMap<Item, Integer> inventory;
@@ -54,10 +56,14 @@ public class Inventory {
         }
     }
 
-    public Integer getTotalAmount(String item) {
-        Item itemWithPromotion = getItemWithPromotion(item);
-        Item itemWithoutPromotion = getItemWithoutPromotion(item);
-        return inventory.get(itemWithPromotion) + inventory.get(itemWithoutPromotion);
+    public Integer getTotalAmount(String itemName) {
+        List<Item> totalItems = inventory.keySet().stream().filter(item -> item.getName().equals(itemName)).toList();
+        int totalAmount = 0;
+        for (Item item : totalItems) {
+            Integer amount = inventory.get(item);
+            totalAmount += amount;
+        }
+        return totalAmount;
     }
 
     public Item getItemWithPromotion(String itemName) {
