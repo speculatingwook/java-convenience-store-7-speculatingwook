@@ -67,7 +67,7 @@ public class PosMachine {
 
     private void offerMorePromotedItem(Item item, Integer quantity, YesNoOption option) {
         if (canOfferMorePromotions(item, quantity) && option.isMoreStockRequest(item.getName())) {
-            orderItemInfo.updatePromotedItem(item, quantity);
+            orderItemInfo.updatePromotedItem(item, 1);
         }
     }
 
