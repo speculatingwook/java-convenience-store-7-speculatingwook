@@ -1,7 +1,6 @@
 package store.config;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 import java.util.function.Supplier;
 
 /**
@@ -37,4 +36,12 @@ public class Container {
         registry.clear();
         singletons.clear();
     }
+
+    public static void resetExcept(Class<?>... typesToKeep) {
+        Set<Class<?>> typesToExclude = new HashSet<>(Arrays.asList(typesToKeep));
+
+        registry.keySet().removeIf(type -> !typesToExclude.contains(type));
+        singletons.keySet().removeIf(type -> !typesToExclude.contains(type));
+    }
+
 }

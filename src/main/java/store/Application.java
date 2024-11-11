@@ -17,7 +17,6 @@ public class Application {
     private static void setup() {
         StoreConfig storeConfig = new StoreConfig();
         storeConfig.registerIO();
-        storeConfig.registerStockServices();
         storeConfig.registerParser();
         storeConfig.registerPosServices();
         storeConfig.registerPaymentServices();
@@ -34,6 +33,8 @@ public class Application {
     }
 
     public static void main(String[] args) {
+        StoreConfig storeConfig = new StoreConfig();
+        storeConfig.registerStockServices();
         processTransaction();
     }
 
@@ -59,10 +60,18 @@ public class Application {
     private static void finalizeTransaction(StoreComponents components, String receipt, OrderItemInfo orderItemInfo) {
         components.view.printReceipt(receipt);
         saveInventoryState(components.inventory, orderItemInfo);
-        Container.reset();
+        Container.resetExcept(Inventory.class);
 
-        if (components.option.buyMoreItems()) {
+        repeatTransaction(components);
+    }
+
+    private static void repeatTransaction(StoreComponents components) {
+        boolean buyMore = components.option.buyMoreItems();
+        if (buyMore) {
             processTransaction();
+        }
+        if (!buyMore) {
+            Container.reset();
         }
     }
 
