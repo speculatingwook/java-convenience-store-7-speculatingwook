@@ -86,9 +86,9 @@ class PaymentTest {
         // given
         Item snack = new Item("과자", "1000", promotion);
         Item drink = new Item("음료", "2000");
-
         orderItemInfo.updatePromotedItem(snack, 2);
         orderItemInfo.updateUnPromotedItem(drink, 1);
+
         payment.receiveOrderItemInfo(orderItemInfo);
 
         TestStoreInput testInput = new TestStoreInput(true);

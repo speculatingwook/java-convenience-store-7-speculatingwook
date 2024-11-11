@@ -4,8 +4,9 @@ import java.util.HashMap;
 
 public record Items(HashMap<Item, Integer> items) {
     public Items addItems(Items items) {
-        this.items.putAll(items.items);
-        return this;
+        Items newItems = new Items(new HashMap<>(this.items));
+        newItems.items.putAll(items.items);
+        return newItems;
     }
 
     public boolean isItemExist(Item item) {

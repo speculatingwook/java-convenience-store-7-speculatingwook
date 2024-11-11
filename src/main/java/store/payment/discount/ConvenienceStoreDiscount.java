@@ -37,7 +37,7 @@ public class ConvenienceStoreDiscount implements Discount {
     @Override
     public Double receiveMembershipDiscount(Items unpromotedItems) {
         int totalPrice = calculateTotalPrice(unpromotedItems);
-        double discountAmount = (double) (totalPrice / discountPercentage);
+        double discountAmount = (double) totalPrice * (discountPercentage / 100.0);
         if(discountAmount > maxMembershipDiscountAmount) {
             return (double) maxMembershipDiscountAmount;
         }
