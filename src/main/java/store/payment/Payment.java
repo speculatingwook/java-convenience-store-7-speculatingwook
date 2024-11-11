@@ -4,6 +4,7 @@ import store.io.YesNoOption;
 import store.payment.discount.Discount;
 import store.pos.OrderItemInfo;
 import store.stock.Item;
+import store.stock.Items;
 
 import java.util.Map;
 
@@ -11,6 +12,7 @@ public class Payment {
     private final Receipt receipt;
     private final Discount discount;
     private OrderItemInfo orderItemInfo;
+    private PaymentInfo paymentInfo;
 
     public Payment(Receipt receipt, Discount discount) {
         this.receipt = receipt;
@@ -19,84 +21,41 @@ public class Payment {
 
     public void receiveOrderItemInfo(OrderItemInfo orderItemInfo) {
         this.orderItemInfo = orderItemInfo;
+        this.paymentInfo = new PaymentInfo(orderItemInfo, discount);
     }
 
     public String issueReceipt(YesNoOption option) {
-        int promotionDiscountAmount = discount.receivePromotionDiscount(orderItemInfo.getPromotedItems().items());
-        double membershipDiscountAmount = discount.receiveMembershipDiscount(orderItemInfo.getUnpromotedItems().items());
-        addItemsToReceipt();
-        addDiscountsToReceipt(option, promotionDiscountAmount, membershipDiscountAmount);
+        addPurchaseItemsToReceipt();
+        applyPromotions();
+        applyMembership(option);
+        addTotalResults();
 
-        receipt.addTotalPrice(getTotalCount(), getTotalAmount());
         return receipt.issueReceipt();
     }
 
-    private void addItemsToReceipt() {
-        addPromotedItemsToReceipt();
-        addUnpromotedItemsToReceipt();
+    private void addPurchaseItemsToReceipt() {
+        Map<Item, Integer> orderItems = orderItemInfo.getOrderItems().items();
+        for (Item item : orderItems.keySet()) {
+            receipt.addItemContent(item.getName(), orderItems.get(item), item.getPrice());
+        }
     }
 
-    private void addDiscountsToReceipt(YesNoOption option, Integer discountAmount, Double membershipDiscountAmount) {
+    private void applyPromotions() {
+        Items offerItems = paymentInfo.getOfferItems();
+        for (Item item : offerItems.items().keySet()) {
+            receipt.addPromotionContent(item.getName(), offerItems.items().get(item));
+        }
+    }
+
+    private void applyMembership(YesNoOption option) {
         boolean isMembership = option.getMembershipDiscount();
-        if (isMembership) {
-            addMembershipDiscountToReceipt(discountAmount, membershipDiscountAmount);
-        }
-        if (!isMembership) {
-            addDefaultDiscountToReceipt(discountAmount);
-        }
+        paymentInfo.applyMembership(isMembership);
     }
 
-    private void addMembershipDiscountToReceipt(Integer promotionDiscountAmount, Double membershipDiscountAmount) {
-        receipt.addTotalDiscount(promotionDiscountAmount, membershipDiscountAmount);
-        double totalPay = getTotalAmount() - promotionDiscountAmount - membershipDiscountAmount;
-        receipt.addResult(totalPay);
-    }
-
-    private void addDefaultDiscountToReceipt(Integer promotionDiscountAmount) {
-        receipt.addTotalDiscount(promotionDiscountAmount, 0);
-        double totalPay = getTotalAmount() - promotionDiscountAmount;
-        receipt.addResult(totalPay);
-    }
-
-    private void addPromotedItemsToReceipt() {
-        Map<Item, Integer> orderItems = orderItemInfo.getPromotedItems().items();
-        for (Map.Entry<Item, Integer> entry : orderItems.entrySet()) {
-            Item item = entry.getKey();
-            Integer quantity = entry.getValue();
-            int offerAmount = quantity / (item.getPromotionMinimumBuyCount() + item.getPromotionOfferCount());
-            receipt.addItemContent(item.getName(), quantity, item.getPrice());
-            receipt.addPromotionContent(item.getName(), offerAmount);
-        }
-    }
-
-    private void addUnpromotedItemsToReceipt() {
-        Map<Item, Integer> orderItems = orderItemInfo.getUnpromotedItems().items();
-        for (Map.Entry<Item, Integer> entry : orderItems.entrySet()) {
-            Item item = entry.getKey();
-            Integer quantity = entry.getValue();
-            receipt.addItemContent(item.getName(), quantity, item.getPrice());
-        }
-    }
-
-    private Integer getTotalAmount() {
-        int totalAmount = 0;
-        Map<Item, Integer> orderItems = orderItemInfo.getOrderItems().items();
-        for (Map.Entry<Item, Integer> entry : orderItems.entrySet()) {
-            Item item = entry.getKey();
-            Integer quantity = entry.getValue();
-            totalAmount += item.getPrice() * quantity;
-        }
-        return totalAmount;
-    }
-
-    private Integer getTotalCount() {
-        int totalCount = 0;
-        Map<Item, Integer> orderItems = orderItemInfo.getOrderItems().items();
-        for (Map.Entry<Item, Integer> entry : orderItems.entrySet()) {
-            Integer quantity = entry.getValue();
-            totalCount += quantity;
-        }
-        return totalCount;
+    private void addTotalResults() {
+        receipt.addTotalPurchaseAmount(paymentInfo.getTotalItemCounts(), paymentInfo.getTotalPurchaseAmount());
+        receipt.addTotalDiscount(paymentInfo.getPromotionDiscountAmount(), paymentInfo.getMembershipDiscountAmount());
+        receipt.addAmountToPay(paymentInfo.getAmountToPay());
     }
 
 }

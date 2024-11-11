@@ -14,16 +14,13 @@ import store.util.parser.Parser;
 import static store.config.StoreConfig.PRODUCT_FILE_NAME;
 
 public class Application {
-    public static void main(String[] args) {
-        processTransaction();
-    }
-
-    private static void processTransaction() {
-        setup();
-        StoreComponents components = initializeComponents();
-        OrderItemInfo orderInfo = processOrder(components.posMachine, components.option);
-        String receipt = handlePayment(components.payment, orderInfo, components.option);
-        finalizeTransaction(components, receipt, orderInfo);
+    private static void setup() {
+        StoreConfig storeConfig = new StoreConfig();
+        storeConfig.registerIO();
+        storeConfig.registerStockServices();
+        storeConfig.registerParser();
+        storeConfig.registerPosServices();
+        storeConfig.registerPaymentServices();
     }
 
     private static StoreComponents initializeComponents() {
@@ -34,6 +31,18 @@ public class Application {
                 Container.getInstance(Payment.class),
                 Container.getInstance(Inventory.class)
         );
+    }
+
+    public static void main(String[] args) {
+        processTransaction();
+    }
+
+    private static void processTransaction() {
+        setup();
+        StoreComponents components = initializeComponents();
+        OrderItemInfo orderInfo = processOrder(components.posMachine, components.option);
+        String receipt = handlePayment(components.payment, orderInfo, components.option);
+        finalizeTransaction(components, receipt, orderInfo);
     }
 
     private static OrderItemInfo processOrder(PosMachine posMachine, YesNoOption option) {
@@ -63,15 +72,6 @@ public class Application {
         Parser parser = Container.getInstance(Parser.class);
         Writer writer = Container.getInstance(Writer.class);
         writer.write(PRODUCT_FILE_NAME, parser.parseStockToText(inventory.getInventory()));
-    }
-
-    private static void setup() {
-        StoreConfig storeConfig = new StoreConfig();
-        storeConfig.registerIO();
-        storeConfig.registerStockServices();
-        storeConfig.registerParser();
-        storeConfig.registerPosServices();
-        storeConfig.registerPaymentServices();
     }
 
     private record StoreComponents(

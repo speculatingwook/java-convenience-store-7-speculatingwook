@@ -2,11 +2,13 @@ package store.payment.discount;
 
 import store.pos.OrderItemInfo;
 import store.stock.Item;
+import store.stock.Items;
 
 import java.util.Map;
 
 public interface Discount extends MembershipDiscount, PromotionDiscount {
-    Integer receivePromotionDiscount(Map<Item, Integer> promotedItems);
+    Integer receivePromotionDiscount(Items promotedItems);
+    Items getOfferItems(Items promotedItems);
 
-    Double receiveMembershipDiscount(Map<Item, Integer> unpromotedItems);
+    Double receiveMembershipDiscount(Items unpromotedItems);
 }

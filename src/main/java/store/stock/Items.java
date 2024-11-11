@@ -23,4 +23,8 @@ public record Items(HashMap<Item, Integer> items) {
             items.put(item, amount);
         }
     }
+
+    public boolean isEmpty() {
+        return items.isEmpty();
+    }
 }

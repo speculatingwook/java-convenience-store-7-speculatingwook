@@ -72,10 +72,13 @@ public class PosMachine {
     }
 
     private void checkPromotedItemLack(Item item, Integer quantity, YesNoOption option) {
-        if (isPromotedAmountLack(item.getName(), quantity) && option.confirmPayWithNoPromotion(item.getName(), quantity)) {
-            Integer totalStock = inventory.getTotalAmount(item.getName());
-            Integer nonPromotionAmount = totalStock - getPromotedItemMaxSellCount(item.getName());
-            orderItemInfo.updateUnPromotedItem(item, nonPromotionAmount);
+        if (isPromotedAmountLack(item.getName(), quantity)) {
+            Integer maximumSellCount = getPromotedItemMaxSellCount(item.getName());
+            if(option.confirmPayWithNoPromotion(item.getName(), quantity - maximumSellCount)) {
+                Integer totalStock = inventory.getTotalAmount(item.getName());
+                Integer nonPromotionAmount = totalStock - getPromotedItemMaxSellCount(item.getName());
+                orderItemInfo.updateUnPromotedItem(item, nonPromotionAmount);
+            }
         }
     }
 
@@ -89,13 +92,13 @@ public class PosMachine {
         return count % (minimumBuyCount + offerCount) == minimumBuyCount;
     }
 
-    public boolean isPromotedAmountLack(String itemName, int count) {
+    public boolean isPromotedAmountLack(String itemName, int orderCount) {
         Item promotionItem = inventory.getItemWithPromotion(itemName);
         if (!promotionItem.isPromotionPresent()) {
             return false;
         }
 
-        return getPromotedItemMaxSellCount(itemName) >= count;
+        return getPromotedItemMaxSellCount(itemName) < orderCount;
     }
 
     private Integer getPromotedItemMaxSellCount(String itemName) {
