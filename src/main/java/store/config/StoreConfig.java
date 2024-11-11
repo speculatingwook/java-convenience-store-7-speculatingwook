@@ -24,8 +24,8 @@ import java.util.function.Supplier;
 
 public class StoreConfig {
     private static final Integer MEMBERSHIP_DISCOUNT_RATE = 30;
-    private static final String PRODUCT_FILE_NAME = "products.md";
-    private static final String PROMOTION_FILE_NAME = "promotions.md";
+    public static final String PRODUCT_FILE_NAME = "products.md";
+    public static final String PROMOTION_FILE_NAME = "promotions.md";
 
     public void registerIO() {
         Container.register(StoreView.class, StoreView::new);

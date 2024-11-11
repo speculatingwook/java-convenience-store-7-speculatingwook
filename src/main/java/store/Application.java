@@ -11,6 +11,8 @@ import store.pos.PosMachine;
 import store.stock.Inventory;
 import store.util.parser.Parser;
 
+import static store.config.StoreConfig.PRODUCT_FILE_NAME;
+
 public class Application {
     public static void main(String[] args) {
         processTransaction();
@@ -60,8 +62,7 @@ public class Application {
         inventory.refresh();
         Parser parser = Container.getInstance(Parser.class);
         Writer writer = Container.getInstance(Writer.class);
-        System.out.println(parser.parseStockToText(inventory.getInventory()));
-        writer.write("products.md", parser.parseStockToText(inventory.getInventory()));
+        writer.write(PRODUCT_FILE_NAME, parser.parseStockToText(inventory.getInventory()));
     }
 
     private static void setup() {
