@@ -1,6 +1,8 @@
 # java-convenience-store-precourse
 ## 프로그램 흐름
 ![image](https://github.com/user-attachments/assets/b031bd40-709c-4b1c-a2a7-14369e194756)
+> 프로그램을 한번 실행하면, 재고를 읽어오고 프로그램을 마칠때까지 재고 상황은 유지됩니다. 이후 프로그램을 마친 후, 해당 파일에 변경사항을 반영합니다.
+
 ## 기능 목록
 
 ### 입출력
