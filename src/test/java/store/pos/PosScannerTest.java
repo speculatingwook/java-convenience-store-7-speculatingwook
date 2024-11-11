@@ -46,8 +46,8 @@ public class PosScannerTest {
         ScanItemInfo scanItemInfo = posScanner.scanItems(itemsToScan);
 
         // then
-        assertTrue(scanItemInfo.getPromotedItems().containsKey(itemWithPromotion));
-        assertEquals(2, scanItemInfo.getPromotedItems().get(itemWithPromotion));
+        assertTrue(scanItemInfo.getPromotedItems().isItemExist(itemWithPromotion));
+        assertEquals(2, scanItemInfo.getPromotedItems().items().get(itemWithPromotion));
     }
 
     @Test
@@ -61,8 +61,8 @@ public class PosScannerTest {
         ScanItemInfo scanItemInfo = posScanner.scanItems(itemsToScan);
 
         // then
-        assertTrue(scanItemInfo.getUnpromotedItems().containsKey(itemWithoutPromotion));
-        assertEquals(3, scanItemInfo.getUnpromotedItems().get(itemWithoutPromotion));
+        assertTrue(scanItemInfo.getUnpromotedItems().isItemExist(itemWithoutPromotion));
+        assertEquals(3, scanItemInfo.getUnpromotedItems().items().get(itemWithoutPromotion));
     }
 
     @Test
@@ -77,11 +77,11 @@ public class PosScannerTest {
         ScanItemInfo scanItemInfo = posScanner.scanItems(itemsToScan);
 
         // then
-        assertTrue(scanItemInfo.getPromotedItems().containsKey(itemWithPromotion));
-        assertEquals(2, scanItemInfo.getPromotedItems().get(itemWithPromotion));
+        assertTrue(scanItemInfo.getPromotedItems().isItemExist(itemWithPromotion));
+        assertEquals(2, scanItemInfo.getPromotedItems().items().get(itemWithPromotion));
 
-        assertTrue(scanItemInfo.getUnpromotedItems().containsKey(itemWithoutPromotion));
-        assertEquals(3, scanItemInfo.getUnpromotedItems().get(itemWithoutPromotion));
+        assertTrue(scanItemInfo.getUnpromotedItems().isItemExist(itemWithoutPromotion));
+        assertEquals(3, scanItemInfo.getUnpromotedItems().items().get(itemWithoutPromotion));
     }
 
     @Test
@@ -103,7 +103,7 @@ public class PosScannerTest {
         ScanItemInfo scanItemInfo = posScanner.scanItems(itemsToScan);
 
         // then
-        assertTrue(scanItemInfo.getUnpromotedItems().containsKey(expiredItem));
-        assertEquals(1, scanItemInfo.getUnpromotedItems().get(expiredItem));
+        assertTrue(scanItemInfo.getUnpromotedItems().isItemExist(expiredItem));
+        assertEquals(1, scanItemInfo.getUnpromotedItems().items().get(expiredItem));
     }
 }

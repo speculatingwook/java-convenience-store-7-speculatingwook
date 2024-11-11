@@ -22,8 +22,8 @@ public class Payment {
     }
 
     public String issueReceipt(YesNoOption option) {
-        int promotionDiscountAmount = discount.receivePromotionDiscount(orderItemInfo.getPromotedItems());
-        double membershipDiscountAmount = discount.receiveMembershipDiscount(orderItemInfo.getUnpromotedItems());
+        int promotionDiscountAmount = discount.receivePromotionDiscount(orderItemInfo.getPromotedItems().items());
+        double membershipDiscountAmount = discount.receiveMembershipDiscount(orderItemInfo.getUnpromotedItems().items());
         addItemsToReceipt();
         addDiscountsToReceipt(option, promotionDiscountAmount, membershipDiscountAmount);
 
@@ -59,7 +59,7 @@ public class Payment {
     }
 
     private void addPromotedItemsToReceipt() {
-        Map<Item, Integer> orderItems = orderItemInfo.getPromotedItems();
+        Map<Item, Integer> orderItems = orderItemInfo.getPromotedItems().items();
         for (Map.Entry<Item, Integer> entry : orderItems.entrySet()) {
             Item item = entry.getKey();
             Integer quantity = entry.getValue();
@@ -70,7 +70,7 @@ public class Payment {
     }
 
     private void addUnpromotedItemsToReceipt() {
-        Map<Item, Integer> orderItems = orderItemInfo.getUnpromotedItems();
+        Map<Item, Integer> orderItems = orderItemInfo.getUnpromotedItems().items();
         for (Map.Entry<Item, Integer> entry : orderItems.entrySet()) {
             Item item = entry.getKey();
             Integer quantity = entry.getValue();
@@ -80,7 +80,7 @@ public class Payment {
 
     private Integer getTotalAmount() {
         int totalAmount = 0;
-        Map<Item, Integer> orderItems = orderItemInfo.getOrderItems();
+        Map<Item, Integer> orderItems = orderItemInfo.getOrderItems().items();
         for (Map.Entry<Item, Integer> entry : orderItems.entrySet()) {
             Item item = entry.getKey();
             Integer quantity = entry.getValue();
@@ -91,7 +91,7 @@ public class Payment {
 
     private Integer getTotalCount() {
         int totalCount = 0;
-        Map<Item, Integer> orderItems = orderItemInfo.getOrderItems();
+        Map<Item, Integer> orderItems = orderItemInfo.getOrderItems().items();
         for (Map.Entry<Item, Integer> entry : orderItems.entrySet()) {
             Integer quantity = entry.getValue();
             totalCount += quantity;

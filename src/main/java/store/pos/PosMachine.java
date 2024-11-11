@@ -46,7 +46,7 @@ public class PosMachine {
     }
 
     public void updateOrderItemInfo(YesNoOption option) {
-        Map<Item, Integer> promotedItems = orderItemInfo.getPromotedItems();
+        Map<Item, Integer> promotedItems = orderItemInfo.getPromotedItems().items();
         for (Map.Entry<Item, Integer> entry : promotedItems.entrySet()) {
             Item item = entry.getKey();
             Integer quantity = entry.getValue();

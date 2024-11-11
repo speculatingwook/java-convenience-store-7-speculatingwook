@@ -1,49 +1,44 @@
 package store.pos;
 
 import store.stock.Item;
-
-import java.util.HashMap;
-import java.util.Map;
+import store.stock.Items;
 
 public class OrderItemInfo {
-    private final Map<Item, Integer> promotedItems;
-    private final Map<Item, Integer> unpromotedItems;
+    private final Items promotedItems;
+    private final Items unpromotedItems;
 
-    public OrderItemInfo(Map<Item, Integer> promotedItems, Map<Item, Integer> unpromotedItems) {
+    public OrderItemInfo(Items promotedItems, Items unpromotedItems) {
         this.promotedItems = promotedItems;
         this.unpromotedItems = unpromotedItems;
     }
 
-    public Map<Item, Integer> getPromotedItems() {
+    public Items getPromotedItems() {
         return promotedItems;
     }
 
-    public Map<Item, Integer> getUnpromotedItems() {
+    public Items getUnpromotedItems() {
         return unpromotedItems;
     }
 
-    public Map<Item, Integer> getOrderItems() {
-        Map<Item, Integer> orderItems = new HashMap<>();
-        orderItems.putAll(promotedItems);
-        orderItems.putAll(unpromotedItems);
-        return orderItems;
+    public Items getOrderItems() {
+        return unpromotedItems.addItems(promotedItems);
     }
 
     public void updatePromotedItem(Item item, int count) {
-        if (promotedItems.containsKey(item)) {
-            promotedItems.put(item, promotedItems.get(item) + count);
+        if (promotedItems.isItemExist(item)) {
+            promotedItems.addAmount(item, count);
         }
-        if (!promotedItems.containsKey(item)) {
-            promotedItems.put(item, count);
+        if (!promotedItems.isItemExist(item)) {
+            promotedItems.addNewItem(item, count);
         }
     }
 
     public void updateUnPromotedItem(Item item, int count) {
-        if (unpromotedItems.containsKey(item)) {
-            unpromotedItems.put(item, unpromotedItems.get(item) + count);
+        if (unpromotedItems.isItemExist(item)) {
+            unpromotedItems.addAmount(item, count);
         }
-        if (!unpromotedItems.containsKey(item)) {
-            unpromotedItems.put(item, count);
+        if (!unpromotedItems.isItemExist(item)) {
+            unpromotedItems.addNewItem(item, count);
         }
     }
 }

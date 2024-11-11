@@ -10,6 +10,7 @@ import store.payment.discount.ConvenienceStoreDiscount;
 import store.payment.discount.Discount;
 import store.pos.OrderItemInfo;
 import store.stock.Item;
+import store.stock.Items;
 import store.stock.Promotion;
 
 import java.util.HashMap;
@@ -32,9 +33,9 @@ class PaymentTest {
         promotion = new Promotion("1+1", "1", "1", "2021-01-01", "2099-01-01");
 
         // OrderItemInfo 초기화
-        Map<Item, Integer> promotedItems = new HashMap<>();
-        Map<Item, Integer> unpromotedItems = new HashMap<>();
-        orderItemInfo = new OrderItemInfo(promotedItems, unpromotedItems);
+        HashMap<Item, Integer> promotedItems = new HashMap<>();
+        HashMap<Item, Integer> unpromotedItems = new HashMap<>();
+        orderItemInfo = new OrderItemInfo(new Items(promotedItems), new Items(unpromotedItems));
     }
 
     @Test

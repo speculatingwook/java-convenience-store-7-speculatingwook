@@ -79,7 +79,7 @@ class PosMachineTest {
 
         // then
         assertNotNull(posMachine.getOrderItemInfo());
-        assertFalse(posMachine.getOrderItemInfo().getUnpromotedItems().isEmpty());
+        assertFalse(posMachine.getOrderItemInfo().getUnpromotedItems().items().isEmpty());
     }
 
     @Test
@@ -126,6 +126,6 @@ class PosMachineTest {
         posMachine.updateOrderItemInfo(option);
 
         // then
-        assertFalse(posMachine.getOrderItemInfo().getUnpromotedItems().isEmpty());
+        assertFalse(posMachine.getOrderItemInfo().getUnpromotedItems().items().isEmpty());
     }
 }

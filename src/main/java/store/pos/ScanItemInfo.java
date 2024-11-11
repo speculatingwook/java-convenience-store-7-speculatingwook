@@ -1,42 +1,43 @@
 package store.pos;
 
 import store.stock.Item;
+import store.stock.Items;
 
 import java.util.HashMap;
 import java.util.Map;
 
 public class ScanItemInfo {
-    private final Map<Item, Integer> promotedItems;
-    private final Map<Item, Integer> unpromotedItems;
+    private final Items promotedItems;
+    private final Items unpromotedItems;
 
     public ScanItemInfo() {
-        this.promotedItems = new HashMap<>();
-        this.unpromotedItems = new HashMap<>();
+        this.promotedItems = new Items(new HashMap<>());
+        this.unpromotedItems = new Items(new HashMap<>());
     }
 
-    public Map<Item, Integer> getPromotedItems() {
+    public Items getPromotedItems() {
         return promotedItems;
     }
 
-    public Map<Item, Integer> getUnpromotedItems() {
+    public Items getUnpromotedItems() {
         return unpromotedItems;
     }
 
     public void updatePromotedItem(Item item, int count) {
-        if (promotedItems.containsKey(item)) {
-            promotedItems.put(item, promotedItems.get(item) + count);
+        if (promotedItems.isItemExist(item)) {
+            promotedItems.addAmount(item, count);
         }
-        if (!promotedItems.containsKey(item)) {
-            promotedItems.put(item, count);
+        if (!promotedItems.isItemExist(item)) {
+            promotedItems.addNewItem(item, count);
         }
     }
 
     public void updateUnPromotedItem(Item item, int count) {
-        if (unpromotedItems.containsKey(item)) {
-            unpromotedItems.put(item, unpromotedItems.get(item) + count);
+        if (unpromotedItems.isItemExist(item)) {
+            unpromotedItems.addAmount(item, count);
         }
-        if (!unpromotedItems.containsKey(item)) {
-            unpromotedItems.put(item, count);
+        if (!unpromotedItems.isItemExist(item)) {
+            unpromotedItems.addNewItem(item, count);
         }
     }
 }

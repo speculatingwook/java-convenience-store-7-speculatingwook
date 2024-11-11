@@ -6,7 +6,6 @@ import store.io.StoreView;
 import store.io.YesNoOption;
 import store.io.writer.Writer;
 import store.payment.Payment;
-import store.payment.Receipt;
 import store.pos.OrderItemInfo;
 import store.pos.PosMachine;
 import store.stock.Inventory;
@@ -57,7 +56,7 @@ public class Application {
     }
 
     private static void saveInventoryState(Inventory inventory, OrderItemInfo orderItemInfo) {
-        inventory.deductItems(orderItemInfo.getOrderItems());
+        inventory.deductItems(orderItemInfo.getOrderItems().items());
         inventory.refresh();
         Parser parser = Container.getInstance(Parser.class);
         Writer writer = Container.getInstance(Writer.class);
