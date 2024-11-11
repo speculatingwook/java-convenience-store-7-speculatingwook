@@ -90,7 +90,7 @@ public class PosMachine {
 
     private void putLackPromotedItemToUnpromoted(Item item) {
         Integer totalStock = inventory.getTotalAmount(item.getName());
-        Integer unpromotedAmount = totalStock - getPromotedItemMaxSellCount(item.getName());
+        int unpromotedAmount = totalStock - getPromotedItemMaxSellCount(item.getName());
         orderItemInfo.updateUnPromotedItem(item, unpromotedAmount);
     }
 
