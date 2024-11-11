@@ -60,7 +60,7 @@ public class StoreConfig {
 
     public void registerPaymentServices() {
         Container.register(Discount.class, () ->
-                new ConvenienceStoreDiscount(MEMBERSHIP_DISCOUNT_RATE, Container.getInstance(Inventory.class))
+                new ConvenienceStoreDiscount(MEMBERSHIP_DISCOUNT_RATE)
         );
         Container.register(Payment.class, ()-> {
             Receipt receipt = new Receipt();

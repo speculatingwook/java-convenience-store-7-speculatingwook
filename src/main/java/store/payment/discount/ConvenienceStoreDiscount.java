@@ -7,11 +7,9 @@ import java.util.Map;
 
 public class ConvenienceStoreDiscount implements Discount {
     private final Integer discountPercentage;
-    private final Inventory inventory;
 
-    public ConvenienceStoreDiscount(Integer discountPercentage, Inventory inventory) {
+    public ConvenienceStoreDiscount(Integer discountPercentage) {
         this.discountPercentage = discountPercentage;
-        this.inventory = inventory;
     }
 
     @Override
