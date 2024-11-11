@@ -24,6 +24,7 @@ import java.util.function.Supplier;
 
 public class StoreConfig {
     private static final Integer MEMBERSHIP_DISCOUNT_RATE = 30;
+    private static final Integer MEMBERSHIP_DISCOUNT_MAX_AMOUNT = 8000;
     public static final String PRODUCT_FILE_NAME = "products.md";
     public static final String PROMOTION_FILE_NAME = "promotions.md";
 
@@ -60,7 +61,7 @@ public class StoreConfig {
 
     public void registerPaymentServices() {
         Container.register(Discount.class, () ->
-                new ConvenienceStoreDiscount(MEMBERSHIP_DISCOUNT_RATE)
+                new ConvenienceStoreDiscount(MEMBERSHIP_DISCOUNT_RATE, MEMBERSHIP_DISCOUNT_MAX_AMOUNT)
         );
         Container.register(Payment.class, ()-> {
             Receipt receipt = new Receipt();

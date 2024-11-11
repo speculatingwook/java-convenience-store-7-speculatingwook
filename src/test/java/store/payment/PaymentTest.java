@@ -28,7 +28,7 @@ class PaymentTest {
     @BeforeEach
     void setUp() {
         receipt = new Receipt();
-        discount = new ConvenienceStoreDiscount(10); // 10% 할인
+        discount = new ConvenienceStoreDiscount(10, 8000); // 10% 할인
         payment = new Payment(receipt, discount);
         promotion = new Promotion("1+1", "1", "1", "2021-01-01", "2099-01-01");
 

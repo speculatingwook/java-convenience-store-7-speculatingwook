@@ -8,9 +8,11 @@ import java.util.HashMap;
 
 public class ConvenienceStoreDiscount implements Discount {
     private final Integer discountPercentage;
+    private final Integer maxMembershipDiscountAmount;
 
-    public ConvenienceStoreDiscount(Integer discountPercentage) {
+    public ConvenienceStoreDiscount(Integer discountPercentage, Integer maxMembershipDiscountAmount) {
         this.discountPercentage = discountPercentage;
+        this.maxMembershipDiscountAmount = maxMembershipDiscountAmount;
     }
 
     @Override
@@ -35,10 +37,19 @@ public class ConvenienceStoreDiscount implements Discount {
 
     @Override
     public Double receiveMembershipDiscount(Items unpromotedItems) {
+        int totalPrice = calculateTotalPrice(unpromotedItems);
+        double discountAmount = (double) (totalPrice / discountPercentage);
+        if(discountAmount > maxMembershipDiscountAmount) {
+            return (double) maxMembershipDiscountAmount;
+        }
+        return discountAmount;
+    }
+
+    private Integer calculateTotalPrice(Items unpromotedItems) {
         int totalPrice = 0;
         for (Item item : unpromotedItems.items().keySet()) {
             totalPrice += item.getPrice() * unpromotedItems.items().get(item);
         }
-        return (double) (totalPrice / discountPercentage);
+        return totalPrice;
     }
 }
