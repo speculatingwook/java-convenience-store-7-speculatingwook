@@ -1,4 +1,6 @@
 # java-convenience-store-precourse
+## 프로그램 흐름
+![image](https://github.com/user-attachments/assets/b031bd40-709c-4b1c-a2a7-14369e194756)
 ## 기능 목록
 
 ### 입출력
@@ -162,3 +164,6 @@
 
 #### 2차
 ![image](https://github.com/user-attachments/assets/6e1390d5-4438-474e-b06e-cbb87b3f7355)
+
+#### 최종
+![image](https://github.com/user-attachments/assets/b031bd40-709c-4b1c-a2a7-14369e194756)
