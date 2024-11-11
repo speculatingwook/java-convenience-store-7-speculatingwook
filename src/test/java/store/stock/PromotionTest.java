@@ -3,6 +3,7 @@ package store.stock;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import store.ErrorCode;
+import store.stock.item.Promotion;
 
 import static org.junit.jupiter.api.Assertions.*;
 

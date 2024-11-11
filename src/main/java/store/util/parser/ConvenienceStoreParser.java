@@ -1,8 +1,9 @@
 package store.util.parser;
 
-import store.stock.Item;
+import store.stock.item.Item;
 import store.stock.dto.ItemDto;
 import store.stock.dto.PromotionDto;
+import store.stock.item.Items;
 
 import java.text.DecimalFormat;
 import java.util.*;
@@ -45,26 +46,26 @@ public class ConvenienceStoreParser implements Parser {
     }
 
     @Override
-    public String parseStockToText(Map<Item, Integer> items) {
+    public String parseStockToText(Items items) {
         String header = "name,price,quantity,promotion";
         return header + "\n" + parseItemDtos(items);
     }
 
-    private String parseItemDtos(Map<Item, Integer> items) {
+    private String parseItemDtos(Items items) {
         StringBuilder itemsText = new StringBuilder();
-        for (Item item : items.keySet()) {
+        for (Item item : items.items().keySet()) {
             itemsText.append(addItemText(items, item));
         }
         return itemsText.toString();
     }
 
-    private StringBuilder addItemText(Map<Item, Integer> items, Item item) {
+    private StringBuilder addItemText(Items items, Item item) {
         StringBuilder itemText = new StringBuilder();
         String promotion = item.getPromotionName();
         if (promotion.isEmpty()){
             promotion = "null";
         }
-        itemText.append(String.join(",", item.getName(), String.valueOf(item.getPrice()), String.valueOf(items.get(item)), promotion)).append("\n");
+        itemText.append(String.join(",", item.getName(), String.valueOf(item.getPrice()), String.valueOf(items.items().get(item)), promotion)).append("\n");
         return itemText;
     }
 

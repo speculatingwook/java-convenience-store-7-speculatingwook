@@ -3,6 +3,10 @@ package store.stock;
 import store.stock.dto.ItemDto;
 import store.stock.dto.PromotionDto;
 import store.io.reader.Reader;
+import store.stock.item.Item;
+import store.stock.item.Items;
+import store.stock.item.Promotion;
+import store.stock.item.Promotions;
 import store.util.parser.Parser;
 
 import java.util.HashMap;
@@ -26,7 +30,7 @@ public class InventoryFactory {
         Promotions promotions = createPromotions(promotionFileName);
         HashMap<Item, Integer> inventory = createItems(itemDtos, promotions);
 
-        return new Inventory(inventory);
+        return new Inventory(new Items(inventory));
     }
 
     private HashMap<Item, Integer> createItems(List<ItemDto> itemDtos, Promotions promotions) {

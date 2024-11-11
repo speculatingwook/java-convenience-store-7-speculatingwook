@@ -1,4 +1,4 @@
-package store.stock;
+package store.stock.item;
 
 import java.util.HashMap;
 

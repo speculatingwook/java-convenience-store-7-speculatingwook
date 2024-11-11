@@ -1,9 +1,6 @@
 package store.payment.discount;
 
-import store.stock.Item;
-import store.stock.Items;
-
-import java.util.Map;
+import store.stock.item.Items;
 
 public interface MembershipDiscount {
     Double receiveMembershipDiscount(Items unpromotedItems);

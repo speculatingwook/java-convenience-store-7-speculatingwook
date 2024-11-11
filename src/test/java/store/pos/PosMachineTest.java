@@ -6,9 +6,10 @@ import org.junit.jupiter.api.Test;
 import store.io.StoreInput;
 import store.io.StoreView;
 import store.stock.Inventory;
-import store.stock.Item;
+import store.stock.item.Item;
 import store.ErrorCode;
 import store.io.YesNoOption;
+import store.stock.item.Items;
 
 import java.util.HashMap;
 
@@ -27,7 +28,7 @@ class PosMachineTest {
         items.put(new Item("콜라", "1000"), 10);
         items.put(new Item("과자", "500"), 5);
 
-        inventory = new Inventory(items);
+        inventory = new Inventory(new Items(items));
         scanner = new PosScanner(inventory);
     }
 

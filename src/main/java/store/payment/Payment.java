@@ -3,8 +3,8 @@ package store.payment;
 import store.io.YesNoOption;
 import store.payment.discount.Discount;
 import store.pos.OrderItemInfo;
-import store.stock.Item;
-import store.stock.Items;
+import store.stock.item.Item;
+import store.stock.item.Items;
 
 import java.util.Map;
 

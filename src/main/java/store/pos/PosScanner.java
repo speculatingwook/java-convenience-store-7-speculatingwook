@@ -1,7 +1,7 @@
 package store.pos;
 
 import store.stock.Inventory;
-import store.stock.Item;
+import store.stock.item.Item;
 
 import java.util.Map;
 

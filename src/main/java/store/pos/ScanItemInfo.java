@@ -1,10 +1,9 @@
 package store.pos;
 
-import store.stock.Item;
-import store.stock.Items;
+import store.stock.item.Item;
+import store.stock.item.Items;
 
 import java.util.HashMap;
-import java.util.Map;
 
 public class ScanItemInfo {
     private final Items promotedItems;

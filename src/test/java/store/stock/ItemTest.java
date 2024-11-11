@@ -3,6 +3,8 @@ package store.stock;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import store.stock.item.Item;
+import store.stock.item.Promotion;
 
 class ItemTest {
 

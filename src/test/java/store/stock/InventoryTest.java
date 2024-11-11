@@ -4,6 +4,9 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import store.ErrorCode;
+import store.stock.item.Item;
+import store.stock.item.Items;
+import store.stock.item.Promotion;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -26,14 +29,14 @@ class InventoryTest {
         initialInventory.put(item1, 10);
         initialInventory.put(item2, 5);
 
-        inventory = new Inventory(initialInventory);
+        inventory = new Inventory(new Items(initialInventory));
     }
 
     @Test
     @DisplayName("초기 재고 상태가 유효하게 설정되는지 확인")
     void testInventoryCreation_validInitialInventory() {
         // given, when
-        Map<Item, Integer> currentInventory = inventory.getInventory();
+        Map<Item, Integer> currentInventory = inventory.getInventory().items();
 
         // then
         assertEquals(10, currentInventory.get(item1));
@@ -46,10 +49,11 @@ class InventoryTest {
         // given
         HashMap<Item, Integer> invalidInventory = new HashMap<>();
         invalidInventory.put(item1, -5);
+        Items invalidItems = new Items(invalidInventory);
 
         // when, then
         IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,
-                () -> new Inventory(invalidInventory));
+                () -> new Inventory(invalidItems));
         assertEquals(ErrorCode.COUNT_UNDER_ZERO.getCriticalMessage(), exception.getMessage());
     }
 
@@ -132,8 +136,8 @@ class InventoryTest {
     void testRefresh() {
         // given
         item2 = new Item("음료수", "1000");
-        inventory.getInventory().put(item1, 1);
-        inventory.getInventory().put(item2, 5);
+        inventory.getInventory().items().put(item1, 1);
+        inventory.getInventory().items().put(item2, 5);
 
         // when
         inventory.refresh();

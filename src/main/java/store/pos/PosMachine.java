@@ -3,7 +3,7 @@ package store.pos;
 import store.ErrorCode;
 import store.io.YesNoOption;
 import store.stock.Inventory;
-import store.stock.Item;
+import store.stock.item.Item;
 
 import java.util.Map;
 

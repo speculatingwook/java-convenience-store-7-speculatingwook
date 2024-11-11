@@ -1,8 +1,9 @@
 package store.pos;
 
 import store.stock.Inventory;
-import store.stock.Item;
-import store.stock.Promotion;
+import store.stock.item.Item;
+import store.stock.item.Items;
+import store.stock.item.Promotion;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -30,7 +31,7 @@ public class PosScannerTest {
         items.put(itemWithPromotion, 3);
         items.put(itemWithoutPromotion, 5);
 
-        inventory = new Inventory(items);
+        inventory = new Inventory(new Items(items));
 
         posScanner = new PosScanner(inventory);
     }
@@ -93,7 +94,7 @@ public class PosScannerTest {
 
         HashMap<Item, Integer> items = new HashMap<>();
         items.put(expiredItem, 3);
-        inventory = new Inventory(items);
+        inventory = new Inventory(new Items(items));
         posScanner = new PosScanner(inventory);
 
         // when

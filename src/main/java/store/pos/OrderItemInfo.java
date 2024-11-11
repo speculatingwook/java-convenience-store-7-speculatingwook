@@ -1,7 +1,7 @@
 package store.pos;
 
-import store.stock.Item;
-import store.stock.Items;
+import store.stock.item.Item;
+import store.stock.item.Items;
 
 public class OrderItemInfo {
     private final Items promotedItems;

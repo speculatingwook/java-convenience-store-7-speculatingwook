@@ -9,12 +9,11 @@ import store.io.YesNoOption;
 import store.payment.discount.ConvenienceStoreDiscount;
 import store.payment.discount.Discount;
 import store.pos.OrderItemInfo;
-import store.stock.Item;
-import store.stock.Items;
-import store.stock.Promotion;
+import store.stock.item.Item;
+import store.stock.item.Items;
+import store.stock.item.Promotion;
 
 import java.util.HashMap;
-import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

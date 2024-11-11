@@ -1,4 +1,4 @@
-package store.stock;
+package store.stock.item;
 
 import store.ErrorCode;
 

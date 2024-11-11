@@ -2,6 +2,8 @@ package store.stock;
 
 
 import store.ErrorCode;
+import store.stock.item.Item;
+import store.stock.item.Items;
 import store.util.parser.ConvenienceStoreParser;
 
 import java.util.HashMap;
@@ -9,16 +11,16 @@ import java.util.List;
 import java.util.Map;
 
 public class Inventory {
-    private final HashMap<Item, Integer> inventory;
+    private final Items inventory;
 
-    public Inventory(HashMap<Item, Integer> inventory) {
+    public Inventory(Items inventory) {
         validate(inventory);
         this.inventory = inventory;
     }
 
-    private void validate(HashMap<Item, Integer> inventory) {
-        for (Item item : inventory.keySet()) {
-            if (inventory.get(item) < 0) {
+    private void validate(Items inventory) {
+        for (Item item : inventory.items().keySet()) {
+            if (inventory.items().get(item) < 0) {
                 throw new IllegalArgumentException(ErrorCode.COUNT_UNDER_ZERO.getCriticalMessage());
             }
         }
@@ -31,16 +33,16 @@ public class Inventory {
         }
     }
 
-    public Map<Item, Integer> getInventory() {
+    public Items getInventory() {
         return inventory;
     }
 
     public Integer getItemCount(Item item) {
-        return inventory.get(item);
+        return inventory.items().get(item);
     }
 
     public boolean isItemPresent(String itemName) {
-        return inventory.keySet().stream()
+        return inventory.items().keySet().stream()
                 .anyMatch(item -> item.getName().equals(itemName));
     }
 
@@ -53,28 +55,28 @@ public class Inventory {
      *
      */
     public void refresh() {
-        for (Item item : inventory.keySet()) {
-            Integer amount = inventory.get(item);
+        for (Item item : inventory.items().keySet()) {
+            Integer amount = inventory.items().get(item);
             if (item.isPromotionPresent() && isItemOutOfPromotion(item, amount)) {
-                inventory.put(item, inventory.get(item) - amount);
+                inventory.addAmount(item, -amount);
                 Item unpromotedItem = getItemWithoutPromotion(item.getName());
-                inventory.put(unpromotedItem, inventory.get(unpromotedItem) + amount);
+                inventory.addAmount(unpromotedItem, amount);
             }
         }
     }
 
     public Integer getTotalAmount(String itemName) {
-        List<Item> totalItems = inventory.keySet().stream().filter(item -> item.getName().equals(itemName)).toList();
+        List<Item> totalItems = inventory.items().keySet().stream().filter(item -> item.getName().equals(itemName)).toList();
         int totalAmount = 0;
         for (Item item : totalItems) {
-            Integer amount = inventory.get(item);
+            Integer amount = inventory.items().get(item);
             totalAmount += amount;
         }
         return totalAmount;
     }
 
     public Item getItemWithPromotion(String itemName) {
-        for (Item item : inventory.keySet()) {
+        for (Item item : inventory.items().keySet()) {
             if (item.getName().equals(itemName) && item.isPromotionPresent()) {
                 return item;
             }
@@ -83,7 +85,7 @@ public class Inventory {
     }
 
     public Item getItemWithoutPromotion(String itemName) {
-        for (Item item : inventory.keySet()) {
+        for (Item item : inventory.items().keySet()) {
             if (item.getName().equals(itemName) && !item.isPromotionPresent()) {
                 return item;
             }
@@ -92,7 +94,7 @@ public class Inventory {
     }
 
     private void deductItem(Item item, int amount) {
-        inventory.put(item, inventory.get(item) - amount);
+        inventory.addAmount(item, -amount);
     }
 
     private boolean isItemOutOfPromotion(Item item, int count) {
@@ -102,7 +104,7 @@ public class Inventory {
     @Override
     public String toString() {
         StringBuilder currentStock = new StringBuilder();
-        for (Item item : inventory.keySet()) {
+        for (Item item : inventory.items().keySet()) {
             currentStock.append(addDefaultInfo(item))
                     .append(addStockCountInfo(item))
                     .append(addPromotionInfo(item));
@@ -120,9 +122,9 @@ public class Inventory {
 
     private StringBuilder addStockCountInfo(Item item) {
         StringBuilder stockCount = new StringBuilder();
-        Integer count = inventory.get(item);
+        Integer count = inventory.items().get(item);
         if (!count.equals(0)) {
-            stockCount.append(inventory.get(item)).append("개");
+            stockCount.append(inventory.items().get(item)).append("개");
         }
         if (count.equals(0)) {
             stockCount.append("재고 없음");

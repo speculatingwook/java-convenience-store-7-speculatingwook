@@ -1,8 +1,7 @@
 package store.payment.discount;
 
-import store.stock.Inventory;
-import store.stock.Item;
-import store.stock.Items;
+import store.stock.item.Item;
+import store.stock.item.Items;
 
 import java.util.HashMap;
 
