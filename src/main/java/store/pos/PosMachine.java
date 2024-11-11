@@ -73,13 +73,29 @@ public class PosMachine {
 
     private void checkPromotedItemLack(Item item, Integer quantity, YesNoOption option) {
         if (isPromotedAmountLack(item.getName(), quantity)) {
-            Integer maximumSellCount = getPromotedItemMaxSellCount(item.getName());
-            if(option.confirmPayWithNoPromotion(item.getName(), quantity - maximumSellCount)) {
-                Integer totalStock = inventory.getTotalAmount(item.getName());
-                Integer nonPromotionAmount = totalStock - getPromotedItemMaxSellCount(item.getName());
-                orderItemInfo.updateUnPromotedItem(item, nonPromotionAmount);
-            }
+            changeOrderItemInfoByConfirmPay(item, quantity, option);
         }
+    }
+
+    private void changeOrderItemInfoByConfirmPay(Item item, Integer quantity, YesNoOption option) {
+        Integer maximumSellCount = getPromotedItemMaxSellCount(item.getName());
+        boolean confirmPay = option.confirmPayWithNoPromotion(item.getName(), quantity - maximumSellCount);
+        if(confirmPay) {
+            putLackPromotedItemToUnpromoted(item);
+        }
+        if(!confirmPay) {
+            putAwayLackPromotedItem(item, quantity-maximumSellCount);
+        }
+    }
+
+    private void putLackPromotedItemToUnpromoted(Item item) {
+        Integer totalStock = inventory.getTotalAmount(item.getName());
+        Integer unpromotedAmount = totalStock - getPromotedItemMaxSellCount(item.getName());
+        orderItemInfo.updateUnPromotedItem(item, unpromotedAmount);
+    }
+
+    private void putAwayLackPromotedItem(Item item, Integer lackAmount) {
+        orderItemInfo.updatePromotedItem(item, -lackAmount);
     }
 
     public boolean canOfferMorePromotions(Item item, int count) {
